@@ -1,0 +1,65 @@
+export type AgriculturalDirectoryEntry = {
+  name: string;
+  location: string;
+  website?: string;
+  phone?: string;
+};
+
+export const agriculturalUniversities: AgriculturalDirectoryEntry[] = [
+  { name: 'The Islamia University of Bahawalpur', location: 'Bahawal Pur', website: 'https://www.iub.edu.pk/' },
+  { name: 'Bacha Khan University', location: 'Charsadda', website: 'http://www.bkuc.edu.pk/' },
+  { name: 'Gomal University', location: 'D.I. Khan', website: 'http://www.gu.edu.pk/' },
+  { name: 'University of Agriculture', location: 'Faisalabad', website: 'http://www.uaf.edu.pk/' },
+  { name: 'Lasbela University of Agriculture, Water and Marine Sciences, Uthal', location: 'Lasbela', website: 'https://www.luawms.edu.pk/' },
+  { name: 'Hazara University', location: 'Mansehra', website: 'http://www.hu.edu.pk/' },
+  { name: 'Abdul Wali Khan University, Mardan', location: 'Mardan', website: 'https://awkum.edu.pk/' },
+  { name: 'Bahauddin Zakariya University, Multan', location: 'Multan', website: 'https://www.bzu.edu.pk/' },
+  { name: 'Muhammad Nawaz Sharif University of Agriculture', location: 'Multan', website: 'https://www.mnsuam.edu.pk/' },
+  { name: 'The University of Agriculture, Peshawar', location: 'Peshawar', website: 'https://www.aup.edu.pk/' },
+  { name: 'Khawaja Fareed University of Engineering & Information Technology', location: 'Rahim Yar Khan', website: 'http://kfueit.edu.pk/' },
+  { name: 'University of the Poonch, Rawalakot', location: 'Rawalakot', website: 'https://www.upr.edu.pk/' },
+  { name: 'Pir Mehr Ali Shah Arid Agriculture University', location: 'Rawalpindi', website: 'https://www.uaar.edu.pk/' },
+  { name: 'University of Sargodha', location: 'Sargodha', website: 'https://su.edu.pk/' },
+  { name: 'University of Swabi', location: 'Swabi', website: 'https://uoswabi.edu.pk/' },
+  { name: 'Mir Chakar Khan Rind University', location: 'Sibi', website: 'https://www.mckru.edu.pk/' },
+  { name: 'Pir Mehr Ali Shah Arid Agriculture University Rawalpindi, Sub Campus', location: 'Attock', website: 'https://www.uaar.edu.pk/sub-campus-attock.php' },
+  { name: 'Shaheed Benazir Bhutto University, Sheringal', location: 'Upper Dir', website: 'https://sbbu.edu.pk/' },
+  { name: 'University of Agriculture Faisalabad, Sub Campus', location: 'Depal Pur', website: 'http://www.uaf.edu.pk/subcampus/depalpur/dep_overview.html' },
+  { name: 'The Islamia University of Bahawalpur, Sub Campus', location: 'Bahawal Nagar', website: 'https://www.iub.edu.pk/bahawalnagar-campus' },
+  { name: 'Arid Agriculture University Rawalpindi, Khushab Campus', location: 'Khushab', website: 'https://www.uaar.edu.pk/sub-campus.php' },
+  { name: 'Lasbela University of Agriculture, Water and Marine Sciences, Dera Murad Jamali Campus', location: 'Dera Murad Jamali', website: 'http://www.luawms.edu.pk/' },
+  { name: 'Bahauddin Zakariya University, Layyah Campus', location: 'Layyah', website: 'https://www.bzu.edu.pk/v2_layyahcampus.php' },
+  { name: 'The University of Agriculture, Peshawar, Amir Muhammad Khan Campus', location: 'Mardan', website: 'https://www.aup.edu.pk/news_details.php?n_id=5' },
+  { name: 'The University of Agriculture, Swat Campus', location: 'Swat', website: 'https://www.aup.edu.pk/adm-notice-spring2020-bachelors-swat-campus-nov19.php' },
+  { name: 'The Islamia University of Bahawalpur, Rahim Yar Khan Campus', location: 'Rahim Yar Khan', website: 'https://www.iub.edu.pk/rahim-yar-khan-campus' },
+  { name: 'University College of Agriculture', location: 'D.I. Khan', website: 'http://www.uaf.edu.pk/subcampus/dgkhan/underconstruction.html' },
+  { name: 'Shaheed Zulfiqar Ali Bhutto Agricultural College Dokri', location: 'Larkana', website: 'https://sau.edu.pk/szabac/' },
+  { name: 'Balochistan Agriculture College', location: 'Quetta', website: 'https://www.bac.edu.pk/' },
+  { name: 'BAQAI Veterinary College', location: 'Karachi', website: 'http://baqai.edu.pk/Depart_Veterinary.php' },
+  { name: 'Abdul Wali Khan University, Palosa Campus', location: 'Charsadda', website: 'https://awkum.edu.pk/' },
+  { name: 'Abdul Wali Khan University, Anbar Campus, Swabi', location: 'Swabi', website: 'http://www.awkum.edu.pk/' },
+  { name: 'College of Agriculture', location: 'D.G. Khan', website: 'http://www.uaf.edu.pk/subcampus/dgkhan/underconstruction.html' },
+  { name: 'Ghazi University', location: 'Dera Ghazi Khan', website: 'https://www.gudgk.edu.pk/departments/4' },
+  { name: 'National Textile University', location: 'Faisalabad, Punjab', website: 'http://www.ntu.edu.pk/' },
+  { name: 'University of Punjab', location: 'Lahore', website: 'http://www.pu.edu.pk/' },
+  { name: 'University of Veterinary and Animal Sciences', location: 'Lahore', website: 'http://www.uvas.edu.pk/' },
+  { name: 'University of Management and Technology', location: 'Lahore', website: 'https://www.umt.edu.pk/' },
+  { name: 'University of Karachi', location: 'Karachi', website: 'https://uok.edu.pk/' },
+  { name: 'Cholistan University of Veterinary & Animal Sciences', location: 'Ravi', website: 'http://www.uvas.edu.pk/other_campuses/Ravi-Campus' },
+  { name: 'College of Veterinary and Animal Sciences, Jhang', location: 'Jhang', website: 'http://www.uvas.edu.pk/' },
+  { name: 'Riphah International University Lahore', location: 'Lahore', website: 'https://riphah.edu.pk/lahore' },
+  { name: 'Khyber Institute of Veterinary Sciences', location: 'Peshawar', website: 'https://khyber-institute-of-veterinary-science.business.site/?utm_source=gmb&utm_medium=referral' },
+  { name: 'Khan Bahadur Chaudhary Mushtaq Ahmad College of Veterinary and Animal Sciences Narowal', location: 'Narowal', website: 'https://campusguru.pk/en/university/narowal/university-of-veterinary-animal-science-uvasnarowal-campus' },
+];
+
+export const agriculturalResearchCenters: AgriculturalDirectoryEntry[] = [
+  { name: 'Ayub Agriculture Research Institute', location: 'Jhang Rd, Faisalabad, Punjab', phone: '(041) 9201671', website: 'https://aari.punjab.gov.pk/' },
+  { name: 'Barani Agricultural Research Institute (BARI)', location: 'Talagang Rd, Thoha Bahadur, Chakwal, Punjab', phone: '(0543) 662004', website: 'http://www.barichakwal.agripunjab.gov.pk/' },
+  { name: 'Nuclear Institute for Agriculture & Biology', location: 'Jhang Rd, Faisalabad, Punjab', phone: '(041) 2654210', website: 'http://www.niab.org.pk/' },
+  { name: 'Rice Research Institute, Kala Shah Kaku', location: '17-km GT Rd, Kala Shah Kaku, Sheikhupura, Punjab', phone: '(042) 37951826' },
+  { name: 'Potato Research Institute, Sahiwal', location: 'M5C6+7C5, Sahiwal, Sahiwal District, Punjab', phone: '(040) 9239063' },
+  { name: 'Agriculture Research Institute', location: 'Takhtaband Bypass Rd, Mingora, Ingaroderai, Swat, Khyber Pakhtunkhwa', phone: '(0946) 812284' },
+  { name: 'Fodder Research Institute, Sargodha', location: '4MFJ+86C, Sargodha, Punjab', phone: '(048) 3712653' },
+  { name: 'Soil Fertility Research Institute', location: 'Canal Rd, Irrigation Colony, Lahore, Punjab', phone: '(042) 99233581' },
+  { name: 'Agricultural Research Institute Tarnab Peshawar', location: 'GT Road, Tarnab, Peshawar, Khyber Pakhtunkhwa' },
+];
