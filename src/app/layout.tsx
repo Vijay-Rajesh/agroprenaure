@@ -21,7 +21,7 @@ const notoNastaliqUrdu = Noto_Nastaliq_Urdu({
 });
 
 export const metadata: Metadata = {
-  title: "VISION 2040 — Agriculture Community Survey Pakistan",
+  title: "The Agropreneurs",
   description: "Share your experience to help shape a stronger, fairer, and more sustainable agricultural future for Pakistan.",
 };
 
