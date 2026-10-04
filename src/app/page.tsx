@@ -21,7 +21,6 @@ import {
   Store,
   Tractor,
   UsersRound,
-  Wheat,
   ChartNoAxesCombined,
 } from 'lucide-react';
 import SiteFooter from '@/components/site-footer';
@@ -375,16 +374,12 @@ export default function Home() {
     <main id="top">
       <SiteHeader />
 
-      <section className="hero-section relative isolate flex min-h-[76svh] items-center overflow-hidden">
-        <div className="hero-photo" role="img" aria-label={text('Farmer walking beside irrigated green fields in Pakistan at sunrise')} style={{ backgroundImage: `url(${JSON.stringify(homeHero.imageUrl)}), url('/vision-2040-fields.jpg')` }} />
+      <section className="hero-section relative isolate overflow-hidden">
+        <div className="hero-photo" role="img" aria-label="We are Agropreneurs, planting a seedling together" style={{ backgroundImage: "url('/herosection.jpg')" }} />
         <div className="hero-shade" />
         <div className="hero-content mx-auto w-full max-w-6xl px-5">
-          <div className="hero-copy" dir={isUrdu ? 'rtl' : 'ltr'}>
-            <p className="eyebrow hero-eyebrow"><Wheat size={16} /> {isUrdu ? homeHero.eyebrowUr : homeHero.eyebrowEn}</p>
-            <h1>{isUrdu ? homeHero.titleUr : homeHero.titleEn}</h1>
-            <p className="hero-description">{isUrdu ? homeHero.descriptionUr : homeHero.descriptionEn}</p>
+          <div className="hero-copy">
             <button className="button hero-button" onClick={scrollToSurvey}>{text('Start the Survey')}<ArrowRight size={17} /></button>
-            <p className="hero-note"><ShieldCheck size={16} />{text('Confidential • 15–20 minutes')}</p>
           </div>
         </div>
       </section>
@@ -446,7 +441,7 @@ export default function Home() {
             </div>
           </div>
           <figure className="founder-message-image">
-            <Image src="/vision-2040-fields.jpg" alt={isUrdu ? 'پاکستان کے کھیتوں میں کام کرنے والا کسان' : 'A farmer walking through fields in Pakistan'} fill sizes="(max-width: 768px) 100vw, 48vw" />
+            <Image src="/founder.jpg" alt={isUrdu ? 'بانی، دی ایگروپرینیورز' : 'Muhammad Haider, Founder of The Agropreneurs'} fill sizes="(max-width: 768px) 100vw, 48vw" />
             <figcaption>{isUrdu ? 'پاکستان کا زرعی مستقبل' : 'Growing a stronger agricultural future'}</figcaption>
           </figure>
         </div>

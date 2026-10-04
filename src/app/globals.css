@@ -101,7 +101,7 @@ textarea:focus-visible {
 }
 
 .site-header {
-  height: 81px;
+  height: 110px;
   border-bottom: 1px solid rgb(49 72 52 / 10%);
   background: rgb(250 249 243 / 95%);
   backdrop-filter: blur(14px);
@@ -122,11 +122,17 @@ textarea:focus-visible {
 
 .brand-mark {
   display: grid;
-  width: 38px;
-  height: 38px;
+  width: 100px;
+  height: 100px;
   flex: 0 0 auto;
   place-items: center;
   color: var(--forest);
+}
+
+.brand-mark img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .brand-copy {
@@ -212,7 +218,7 @@ textarea:focus-visible {
   padding: 0 7px;
   background: transparent;
   color: #405044;
-  font-size: 9px;
+  font-size: 11px;
   font-weight: 750;
   letter-spacing: 0.035em;
   white-space: nowrap;
@@ -385,7 +391,7 @@ textarea:focus-visible {
     right: 0;
     left: 0;
     display: none;
-    max-height: calc(100svh - 70px);
+    max-height: calc(100svh - 110px);
     overflow-y: auto;
     align-items: stretch;
     flex-direction: column;
@@ -407,7 +413,7 @@ textarea:focus-visible {
     min-height: 43px;
     justify-content: space-between;
     padding: 0 10px;
-    font-size: 11px;
+    font-size: 13px;
   }
 
   .nav-home {
@@ -472,18 +478,23 @@ textarea:focus-visible {
 }
 
 .hero-shade {
-  background: linear-gradient(90deg, rgb(12 28 17 / 83%) 0%, rgb(19 39 23 / 67%) 40%, rgb(19 39 23 / 17%) 100%), linear-gradient(0deg, rgb(12 28 17 / 22%), transparent 42%);
+  background: linear-gradient(0deg, rgb(12 28 17 / 48%), transparent 38%);
 }
 
 .hero-content {
-  max-width: 1180px;
-  padding-top: 46px;
-  padding-bottom: 68px;
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  max-width: none;
+  padding: 32px clamp(22px, 4vw, 56px) 106px;
+  pointer-events: none;
 }
 
 .hero-copy {
-  max-width: 720px;
+  max-width: none;
   animation: rise-in 750ms 100ms both;
+  pointer-events: auto;
 }
 
 .eyebrow {
@@ -2876,20 +2887,18 @@ textarea.admin-question-input {
 }
 
 @media (max-width: 700px) {
-  .site-header { height: 70px; }
+  .site-header { height: 88px; }
   .header-inner { padding-right: 15px; padding-left: 15px; }
-  .brand-mark { width: 31px; }
+  .brand-mark { width: 76px; height: 76px; }
+  .primary-navigation { max-height: calc(100svh - 88px); }
   .brand-copy strong { font-size: 13px; }
   .brand-copy small { font-size: 7px; }
   .header-actions { gap: 8px; }
   .button-small { min-height: 37px; padding: 0 10px; font-size: 11px; }
   .language-button { font-size: 12px; }
-  .hero-section { min-height: 690px; min-height: max(620px, 82svh); }
-  .hero-photo { background-position: 60% center; }
-  .hero-shade { background: linear-gradient(90deg, rgb(12 28 17 / 81%), rgb(19 39 23 / 50%)), linear-gradient(0deg, rgb(12 28 17 / 28%), transparent 55%); }
-  .hero-content { padding: 64px 22px 83px; }
-  .hero-copy h1 { max-width: 560px; font-size: clamp(39px, 10.8vw, 52px); }
-  .hero-description { max-width: 500px; font-size: 14px; line-height: 1.75; }
+  .hero-section { min-height: 0; aspect-ratio: 16 / 9; }
+  .hero-photo { background-position: center; background-size: 100% 100%; }
+  .hero-content { padding: 0 22px 52px; }
   .why-section h2, .section-heading h2, .about-intro h2, .survey-intro h2 { font-size: 30px; }
   .stats-row { gap: 9px; }
   .stats-row strong { font-size: 12px; }
@@ -3020,7 +3029,7 @@ textarea.admin-question-input {
 @media (max-width: 430px) {
   .header-inner { padding-right: 12px; padding-left: 12px; }
   .brand { gap: 7px; }
-  .brand-mark { width: 27px; }
+  .brand-mark { width: 68px; height: 68px; }
   .brand-copy strong { font-size: 12px; }
   .brand-copy small { display: none; }
   .button-small { min-height: 35px; padding: 0 8px; font-size: 10px; }

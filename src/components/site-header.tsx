@@ -2,7 +2,8 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { ChevronDown, Menu, Sprout, X } from 'lucide-react';
+import Image from 'next/image';
+import { ChevronDown, Menu, X } from 'lucide-react';
 import { navigationSections } from '@/lib/site-content';
 import { useSiteData } from '@/components/site-data-provider';
 import { useSiteLanguage } from '@/components/language-provider';
@@ -53,7 +54,7 @@ export default function SiteHeader({ ctaHref }: SiteHeaderProps) {
     <header className="site-header sticky top-0 z-50">
       <div className="header-inner mx-auto flex w-full max-w-6xl items-center justify-between px-5">
         <Link className="brand" href="/" aria-label={text('The Agropreneurs home')} onClick={closeNavigation}>
-          <span className="brand-mark"><Sprout size={23} strokeWidth={1.8} /></span>
+          <span className="brand-mark"><Image src="/logo.png" alt="" width={38} height={38} /></span>
           <span className="brand-copy"><strong>The Agropreneurs</strong><small>{text('SMART | SUSTAINABLE | AGRICULTURE')}</small></span>
         </Link>
         <nav
