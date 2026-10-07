@@ -112,8 +112,9 @@ export const pageGroups: SiteContentGroup[] = [
 ];
 
 export const navigationSections: NavigationSection[] = [
-  { label: 'ABOUT US', items: [{ label: 'Introduction', href: '/#about' }, { label: "Founder's Message", href: '/#founder' }] },
-  { label: 'VISION 2040', items: [{ label: 'About Vision 2040', href: '/#vision' }, { label: 'Survey', href: '/#survey' }] },
+  { label: 'HOME', items: [{ label: 'Home', href: '/' }] },
+  { label: 'ABOUT US', items: [{ label: 'Introduction', href: '/introduction' }, { label: 'Founder Message', href: '/founder' }, { label: 'The Agropreneurs', href: '/about' }] },
+  { label: 'VISION 2040', items: [{ label: 'Vision & Goals', href: '/vision' }, { label: 'Survey Form', href: '/survey-form' }] },
   ...pageGroups.map((group) => ({
     label: group.label,
     items: group.pages.map((contentPage) => ({

@@ -31,6 +31,7 @@ const uiTranslations: Record<string, string> = {
   Breadcrumb: 'صفحے کا راستہ',
   'SMART | SUSTAINABLE | AGRICULTURE': 'ذہین | پائیدار | زراعت',
   'Take the Survey': 'سروے میں حصہ لیں',
+  'Survey Form': 'سروے فارم',
   'Explore VISION 2040 survey': 'وژن 2040 سروے دیکھیں',
   'Take the survey': 'سروے میں حصہ لیں',
   'Back to home': 'مرکزی صفحے پر واپس جائیں',

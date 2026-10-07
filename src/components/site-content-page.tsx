@@ -23,7 +23,7 @@ export default function SiteContentPage({ group, page }: SiteContentPageProps) {
 
   return (
     <div id="top">
-      <SiteHeader ctaHref="/#survey" />
+      <SiteHeader ctaHref="/survey-form" />
       <main>
         <section className="detail-hero relative isolate overflow-hidden">
           <div className="hero-photo" role="img" aria-label={contentPage.title} style={page.heroImageUrl ? { backgroundImage: `url(${JSON.stringify(page.heroImageUrl)}), url('/vision-2040-fields.jpg')` } : undefined} />
@@ -35,7 +35,7 @@ export default function SiteContentPage({ group, page }: SiteContentPageProps) {
             <p className="eyebrow hero-eyebrow">The Agropreneurs · {groupLabel}</p>
             <h1>{contentPage.title}</h1>
             <p className="detail-lead">{contentPage.intro}</p>
-            <Link className="button hero-button" href="/#survey">{text('Explore VISION 2040 survey')}<ArrowRight size={17} /></Link>
+            <Link className="button hero-button" href="/survey-form">{text('Explore VISION 2040 survey')}<ArrowRight size={17} /></Link>
           </div>
         </section>
 
@@ -97,7 +97,7 @@ export default function SiteContentPage({ group, page }: SiteContentPageProps) {
         <section className="detail-cta-section">
           <div className="detail-cta-inner mx-auto flex w-full max-w-6xl flex-col items-start justify-between gap-6 px-5 md:flex-row md:items-center">
             <div><p className="eyebrow">{text('VISION 2040')}</p><h2>{text('Help shape a stronger agricultural future.')}</h2></div>
-            <Link className="button" href="/#survey">{text('Take the survey')}<ArrowRight size={17} /></Link>
+            <Link className="button" href="/survey-form">{text('Take the survey')}<ArrowRight size={17} /></Link>
           </div>
         </section>
       </main>

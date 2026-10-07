@@ -109,6 +109,10 @@ textarea:focus-visible {
 
 .header-inner {
   position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
   height: 100%;
   max-width: 1480px;
 }
@@ -138,7 +142,7 @@ textarea:focus-visible {
 .brand-copy {
   flex: 0 0 auto;
   display: grid;
-  gap: 1px;
+  gap: 2px;
 }
 
 .brand-copy strong {
@@ -155,9 +159,9 @@ textarea:focus-visible {
 .brand-copy small {
   white-space: nowrap;
   color: #778078;
-  font-size: 8px;
+  font-size: 9px;
   font-weight: 700;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.015em;
   line-height: 1.4;
 }
 
@@ -350,9 +354,9 @@ textarea:focus-visible {
 }
 
 .button:disabled {
-  border-color: #d9ddd6;
-  background: #d9ddd6;
-  color: #858c84;
+  border-color: #cbd8c9;
+  background: #e8eee6;
+  color: var(--forest);
   cursor: not-allowed;
 }
 
@@ -363,15 +367,20 @@ textarea:focus-visible {
 }
 
 .button-outline {
-  border-color: #d6dcd2;
-  background: transparent;
-  color: var(--foreground);
+  border-color: var(--forest);
+  background: #fffefa;
+  color: var(--forest);
 }
 
 .button-outline:hover:not(:disabled) {
-  border-color: var(--forest);
-  background: #f0f2eb;
+  border-color: var(--forest-deep);
+  background: #f0f4ed;
   color: var(--forest);
+}
+
+.introduction-cta-button,
+.introduction-cta-button:hover {
+  color: #fff;
 }
 
 .language-button {
@@ -421,7 +430,7 @@ textarea:focus-visible {
   }
 
   .brand-copy small {
-    font-size: 8px;
+    font-size: 9px;
   }
 
   .primary-navigation {
@@ -530,7 +539,7 @@ textarea:focus-visible {
   }
 
   .brand-copy small {
-    font-size: 8px;
+    font-size: 9px;
   }
 
   .primary-navigation {
@@ -595,6 +604,31 @@ textarea:focus-visible {
   min-height: min(740px, 78svh);
   background: #253e2e;
   color: white;
+}
+
+.home-hero-section {
+  min-height: clamp(560px, 76svh, 740px);
+}
+
+.home-hero-section .hero-copy {
+  max-width: 780px;
+}
+
+.home-hero-section .hero-eyebrow {
+  margin-bottom: 15px;
+}
+
+.home-hero-section .hero-copy h1 {
+  max-width: 780px;
+  font-size: clamp(42px, 5.2vw, 68px);
+}
+
+.home-hero-section .hero-description {
+  max-width: 610px;
+}
+
+.home-hero-section .hero-note {
+  flex-wrap: wrap;
 }
 
 .hero-photo,
@@ -1427,7 +1461,7 @@ textarea:focus-visible {
 }
 
 .site-footer {
-  background: var(--forest-deep);
+  background: linear-gradient(180deg, #1d3a2b 0%, #173225 100%);
   color: #f4f5ef;
 }
 
@@ -1446,33 +1480,69 @@ textarea:focus-visible {
 }
 
 .footer-brand > p {
-  max-width: 425px;
+  max-width: 420px;
   margin: 12px 0 0 48px;
-  color: rgb(255 255 255 / 68%);
-  font-size: 11px;
-  line-height: 1.8;
+  color: rgb(255 255 255 / 72%);
+  font-size: 12px;
+  line-height: 1.9;
 }
 
 .footer-contact {
   display: grid;
   justify-items: start;
-  gap: 11px;
+  align-content: center;
+  gap: 12px;
   padding-left: 35px;
 }
 
 .footer-contact a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   color: #f2f4eb;
-  font-size: 12px;
+  font-size: 13px;
+  font-weight: 500;
+  transition: opacity 150ms ease;
+}
+
+.footer-contact a:hover {
+  opacity: 0.9;
 }
 
 .footer-contact a svg {
-  color: #c1d0b8;
+  color: #d7e5d0;
+}
+
+.footer-socials {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 2px;
+}
+
+.footer-socials a {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid rgb(255 255 255 / 16%);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.06);
+  color: white;
+  transition: transform 160ms ease, background 160ms ease, border-color 160ms ease;
+}
+
+.footer-socials a:hover {
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgb(255 255 255 / 22%);
 }
 
 .footer-contact p {
   margin: 2px 0 0;
-  color: rgb(255 255 255 / 61%);
-  font-size: 10px;
+  color: rgb(255 255 255 / 68%);
+  font-size: 11px;
+  line-height: 1.7;
 }
 
 .footer-bottom {
@@ -1480,8 +1550,9 @@ textarea:focus-visible {
   min-height: 52px;
   gap: 16px;
   border-top: 1px solid rgb(255 255 255 / 15%);
-  color: rgb(255 255 255 / 62%);
-  font-size: 9px;
+  color: rgb(255 255 255 / 70%);
+  font-size: 10px;
+  letter-spacing: 0.03em;
 }
 
 .detail-hero {
@@ -1525,6 +1596,26 @@ textarea:focus-visible {
   font-size: clamp(40px, 5vw, 60px);
   font-weight: 700;
   line-height: 1.12;
+}
+
+.survey-form-hero .detail-hero-content {
+  width: 100%;
+}
+
+.survey-form-hero .hero-eyebrow {
+  justify-content: center;
+}
+
+.survey-form-hero h1 {
+  margin-right: auto;
+  margin-left: auto;
+  text-align: center;
+}
+
+.survey-form-hero p:not(.hero-eyebrow) {
+  margin-right: auto;
+  margin-left: auto;
+  text-align: center;
 }
 
 .detail-lead {
@@ -3133,13 +3224,16 @@ textarea.admin-question-input {
   .brand-mark { width: 76px; height: 76px; }
   .primary-navigation { max-height: calc(100svh - 88px); }
   .brand-copy strong { font-size: 13px; }
-  .brand-copy small { font-size: 8px; }
+  .brand-copy small { font-size: 9px; }
   .header-actions { gap: 8px; }
   .button-small { min-height: 37px; padding: 0 10px; font-size: 11px; }
   .language-button { font-size: 12px; }
   .hero-section { min-height: 0; aspect-ratio: 16 / 9; }
   .hero-photo { background-position: center; background-size: 100% 100%; }
   .hero-content { padding: 0 22px 30px; }
+  .home-hero-section { min-height: 500px; aspect-ratio: auto; }
+  .home-hero-section .hero-content { padding: 24px 22px 38px; }
+  .home-hero-section .hero-copy h1 { font-size: clamp(38px, 9vw, 52px); }
   .why-section h2, .section-heading h2, .about-intro h2, .survey-intro h2 { font-size: 30px; }
   .stats-row { gap: 9px; }
   .stats-row strong { font-size: 12px; }

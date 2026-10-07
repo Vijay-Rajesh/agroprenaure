@@ -9,13 +9,6 @@ import { useSiteData } from '@/components/site-data-provider';
 import { useSiteLanguage } from '@/components/language-provider';
 import { translateSiteText } from '@/lib/site-translations';
 
-type CmsNavigationSection = {
-  key: string;
-  labelEn: string;
-  labelUr: string;
-  items: { labelEn: string; labelUr: string; href: string }[];
-};
-
 type CmsHomeLink = { labelEn: string; labelUr: string; href: string };
 
 type SiteHeaderProps = {
@@ -38,7 +31,85 @@ export default function SiteHeader({ ctaHref }: SiteHeaderProps) {
       href: item.href,
     }] : []),
   }));
-  const visibleSections: CmsNavigationSection[] = site?.navigation ?? fallbackSections;
+  const siteSections = site?.navigation ?? fallbackSections;
+  const fallbackAbout = fallbackSections.find((section) => section.key === 'about-us');
+  const fallbackVision = fallbackSections.find((section) => section.key === 'vision-2040');
+  const introductionLink = fallbackAbout?.items.find((item) => item.href === '/introduction');
+  const founderLink = fallbackAbout?.items.find((item) => item.href === '/founder');
+  const visionIntroductionLink = fallbackVision
+    ? { labelEn: 'About VISION 2040', labelUr: translateSiteText('About VISION 2040', true), href: '/introduction' }
+    : undefined;
+  const surveyLink = fallbackVision?.items.find((item) => item.href === '/survey-form');
+  const aboutSectionIndex = siteSections.findIndex((section) =>
+    section.key === 'about-us' || section.labelEn.trim().toLowerCase() === 'about us',
+  );
+  const visibleSections = [...siteSections];
+
+  if (founderLink || introductionLink) {
+    if (aboutSectionIndex === -1) {
+      visibleSections.push({
+        ...fallbackAbout!,
+        items: [introductionLink, founderLink].filter((item): item is NonNullable<typeof item> => Boolean(item)),
+      });
+    } else {
+      const aboutSection = visibleSections[aboutSectionIndex];
+      const existingIntroductionLink = aboutSection.items.find((item) => item.href === introductionLink?.href);
+      const existingFounderLink = aboutSection.items.find((item) => item.href === founderLink?.href);
+      const otherItems = aboutSection.items.filter((item) => {
+        const label = item.labelEn.trim().toLowerCase();
+        return item.href !== introductionLink?.href &&
+          item.href !== founderLink?.href &&
+          item.href !== '/#founder' &&
+          item.href !== '/#about' &&
+          !/founder.?s message/i.test(label) &&
+          label !== 'introduction';
+      });
+      visibleSections[aboutSectionIndex] = {
+        ...aboutSection,
+        items: [
+          ...otherItems,
+          existingIntroductionLink ?? introductionLink,
+          existingFounderLink ?? founderLink,
+        ].filter((item): item is NonNullable<typeof item> => Boolean(item)),
+      };
+    }
+  }
+
+  const visionSectionIndex = visibleSections.findIndex((section) =>
+    section.key === 'vision-2040' || section.labelEn.trim().toLowerCase() === 'vision 2040',
+  );
+  if (surveyLink) {
+    if (visionSectionIndex === -1) {
+      visibleSections.push({
+        ...fallbackVision!,
+        items: [visionIntroductionLink, surveyLink].filter((item): item is NonNullable<typeof item> => Boolean(item)),
+      });
+    } else {
+      const visionSection = visibleSections[visionSectionIndex];
+      const existingSurveyLink = visionSection.items.find((item) => item.href === surveyLink.href);
+      const existingIntroductionLink = visionSection.items.find((item) =>
+        item.href === visionIntroductionLink?.href ||
+        /about\s+vision\s*2040/i.test(item.labelEn),
+      );
+      const otherItems = visionSection.items.filter((item) =>
+        item.href !== surveyLink.href &&
+        item.href !== visionIntroductionLink?.href &&
+        !/about\s+vision\s*2040/i.test(item.labelEn) &&
+        !/survey/i.test(item.labelEn),
+      );
+      visibleSections[visionSectionIndex] = {
+        ...visionSection,
+        items: [
+          ...otherItems,
+          existingIntroductionLink
+            ? { ...existingIntroductionLink, href: visionIntroductionLink?.href ?? '/introduction' }
+            : visionIntroductionLink,
+          existingSurveyLink ?? surveyLink,
+        ].filter((item): item is NonNullable<typeof item> => Boolean(item)),
+      };
+    }
+  }
+
   const homeLink: CmsHomeLink | null = site ? site.homeLink : { labelEn: 'HOME', labelUr: 'صفحہ اول', href: '/' };
 
   function closeNavigation() {
@@ -92,11 +163,7 @@ export default function SiteHeader({ ctaHref }: SiteHeaderProps) {
             <button type="button" lang="en" aria-pressed={!isUrdu} onClick={() => setLanguage('en')}>EN</button>
             <button type="button" lang="ur" aria-pressed={isUrdu} onClick={() => setLanguage('ur')}>اردو</button>
           </div>
-          {ctaHref ? (
-            <Link className="button button-small" href={ctaHref} onClick={closeNavigation}>{text('Take the Survey')}</Link>
-          ) : (
-            <button className="button button-small" onClick={() => { closeNavigation(); document.getElementById('survey')?.scrollIntoView({ behavior: 'smooth' }); }}>{text('Take the Survey')}</button>
-          )}
+          <Link className="button button-small" href={ctaHref ?? '/survey-form'} onClick={closeNavigation}>{text('Take the Survey')}</Link>
           <button
             className="mobile-navigation-toggle"
             type="button"
