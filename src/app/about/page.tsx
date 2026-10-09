@@ -110,8 +110,8 @@ export default function AboutPage() {
           </div>
         </section>
 
-        <section className="relative mx-auto -mt-12 max-w-6xl px-5 pb-2 sm:px-6 lg:px-8">
-          <div className="grid gap-4 md:grid-cols-3 md:gap-5">
+        <section className="relative mx-auto -mt-12 max-w-5xl px-5 pb-2 sm:px-6 lg:px-8">
+          <div className="grid gap-3 md:grid-cols-3 md:gap-4">
             {[
               { value: 'Farmers', labelEn: 'Farmers & communities', labelUr: 'کسان اور برادری', icon: Users },
               { value: 'Growth', labelEn: 'Smart growth', labelUr: 'ذہین ترقی', icon: Lightbulb },
@@ -119,12 +119,12 @@ export default function AboutPage() {
             ].map(({ value, labelEn, labelUr, icon: Icon }) => (
               <article
                 key={value}
-                className="flex min-h-[155px] flex-col rounded-[24px] border border-[#e2e8df] bg-white p-5 shadow-[0_12px_30px_rgba(20,83,45,0.06)] transition duration-200 hover:-translate-y-1 hover:shadow-[0_18px_36px_rgba(20,83,45,0.1)] sm:min-h-[165px] sm:p-6"
+                className="flex min-h-[125px] flex-col rounded-[20px] border border-[#e2e8df] bg-white p-4 shadow-[0_10px_24px_rgba(20,83,45,0.06)] transition duration-200 hover:-translate-y-1 hover:shadow-[0_16px_30px_rgba(20,83,45,0.1)] sm:min-h-[135px] sm:p-5"
               >
-                <div className="mb-5 flex h-10 w-10 items-center justify-center rounded-xl bg-[#e3f2e7] text-[#1f5d45]">
-                  <Icon size={21} strokeWidth={2} />
+                <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-xl bg-[#e3f2e7] text-[#1f5d45]">
+                  <Icon size={19} strokeWidth={2} />
                 </div>
-                <h2 className="max-w-[15ch] text-xl font-bold leading-tight tracking-[-0.04em] text-[#1d2d28] sm:text-2xl">
+                <h2 className="max-w-[15ch] text-lg font-bold leading-tight tracking-[-0.04em] text-[#1d2d28] sm:text-xl">
                   {isUrdu ? labelUr : labelEn}
                 </h2>
               </article>

@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Menu, X } from 'lucide-react';
+import { ChevronDown, Menu, X } from 'lucide-react';
 import { navigationSections } from '@/lib/site-content';
 import { useSiteData } from '@/components/site-data-provider';
 import { useSiteLanguage } from '@/components/language-provider';
@@ -16,6 +16,7 @@ type SiteHeaderProps = {
 };
 
 export default function SiteHeader({ ctaHref }: SiteHeaderProps) {
+  const [openNavigation, setOpenNavigation] = useState<string | null>(null);
   const [isMobileNavigationOpen, setIsMobileNavigationOpen] = useState(false);
   const site = useSiteData();
   const { isUrdu, setLanguage } = useSiteLanguage();
@@ -111,31 +112,13 @@ export default function SiteHeader({ ctaHref }: SiteHeaderProps) {
 
   const homeLink: CmsHomeLink | null = site ? site.homeLink : { labelEn: 'HOME', labelUr: 'صفحہ اول', href: '/' };
 
-  const primaryNavigationItems = [
-    homeLink ? { label: isUrdu ? homeLink.labelUr : homeLink.labelEn, href: homeLink.href } : null,
-    ...visibleSections.map((section) => {
-      const normalizedLabel = (isUrdu ? section.labelUr : section.labelEn).trim();
-      const key = (section.key || '').toLowerCase();
-      const aboutMatch = /about/i.test(normalizedLabel) || /about/i.test(key) || key === 'about-us';
-      const visionMatch = /vision/i.test(normalizedLabel) || /vision/i.test(key) || key === 'vision-2040';
-
-      if (aboutMatch) {
-        return { label: text('About Us'), href: '/about' };
-      }
-
-      if (visionMatch) {
-        return { label: 'VISION 2040', href: '/introduction' };
-      }
-
-      const firstItem = section.items[0];
-      if (!firstItem?.href) return null;
-
-      return { label: normalizedLabel || (isUrdu ? firstItem.labelUr : firstItem.labelEn), href: firstItem.href };
-    }),
-  ].filter((item, index, array) => Boolean(item) && array.findIndex((candidate) => candidate && candidate.href === item.href) === index);
-
   function closeNavigation() {
+    setOpenNavigation(null);
     setIsMobileNavigationOpen(false);
+  }
+
+  function handleNavigationKeyDown(event: React.KeyboardEvent<HTMLElement>) {
+    if (event.key === 'Escape') closeNavigation();
   }
 
   return (
@@ -149,10 +132,36 @@ export default function SiteHeader({ ctaHref }: SiteHeaderProps) {
           className={`primary-navigation ${isMobileNavigationOpen ? 'mobile-open' : ''}`}
           id="primary-navigation"
           aria-label={text('Main navigation')}
+          onKeyDown={handleNavigationKeyDown}
         >
-          {primaryNavigationItems.filter(Boolean).map((item) => (
-            <Link className="nav-home" href={item.href} key={item.href} onClick={closeNavigation}>{item.label}</Link>
-          ))}
+          {homeLink && <Link className="nav-home" href={homeLink.href} onClick={closeNavigation}>{isUrdu ? homeLink.labelUr : homeLink.labelEn}</Link>}
+          {visibleSections.filter((section) => section.key !== 'home' && section.labelEn.trim().toLowerCase() !== 'home').map((section) => {
+            const isAboutSection = section.key === 'about-us' || section.labelEn.trim().toLowerCase() === 'about us';
+            if (isAboutSection) {
+              return <Link className="nav-home uppercase" href="/about" key={section.key} onClick={closeNavigation}>{text('About Us')}</Link>;
+            }
+
+            const sectionId = `navigation-${section.key}`;
+            const isExpanded = openNavigation === section.key;
+            return (
+              <div className={`nav-accordion ${isExpanded ? 'is-open' : ''}`} key={section.key}>
+                <button
+                  className="nav-accordion-trigger"
+                  type="button"
+                  aria-expanded={isExpanded}
+                  aria-controls={sectionId}
+                  onClick={() => setOpenNavigation((current) => current === section.key ? null : section.key)}
+                >
+                  {isUrdu ? section.labelUr : section.labelEn}<ChevronDown size={13} aria-hidden="true" />
+                </button>
+                <div className="nav-accordion-panel" id={sectionId} hidden={!isExpanded}>
+                  {section.items.map((item) => (
+                    <Link className="nav-subitem" href={item.href} key={`${item.href}-${item.labelEn}`} onClick={closeNavigation}>{isUrdu ? item.labelUr : item.labelEn}</Link>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
         </nav>
         <nav className="header-actions" aria-label={text('Contact and actions')}>
           <div className="language-switcher" role="group" aria-label={text('Choose language')}>
@@ -166,7 +175,7 @@ export default function SiteHeader({ ctaHref }: SiteHeaderProps) {
             aria-label={text(isMobileNavigationOpen ? 'Close navigation' : 'Open navigation')}
             aria-expanded={isMobileNavigationOpen}
             aria-controls="primary-navigation"
-            onClick={() => setIsMobileNavigationOpen((current) => !current)}
+            onClick={() => { setIsMobileNavigationOpen((current) => !current); setOpenNavigation(null); }}
           >
             {isMobileNavigationOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
