@@ -374,7 +374,7 @@ export default function SurveyExperience({ formOnly = false }: { formOnly?: bool
 
       {!formOnly && <>
       <section className="hero-section relative isolate overflow-hidden">
-        <div className="hero-photo" role="img" aria-label="We are Agropreneurs, planting a seedling together" style={{ backgroundImage: "url('/herosection.jpeg')" }} />
+        <div className="hero-photo" role="img" aria-label="We are Agropreneurs, planting a seedling together" style={{ backgroundImage: "url('/herosection.png')" }} />
         <div className="hero-shade" />
         <div className="hero-content mx-auto w-full max-w-6xl px-5">
           <div className="hero-copy">

@@ -63,7 +63,7 @@ export default function HomePage() {
             className="hero-photo"
             role="img"
             aria-label="Agricultural fields in Pakistan"
-            style={{ backgroundImage: "url('/herosection.jpeg')" }}
+            style={{ backgroundImage: "url('/herosection.png')" }}
           />
         </section>
 
