@@ -157,12 +157,12 @@ export default function AdminDashboard() {
     if (!responsePage) return;
     const firstRecord = responsePage.items[0];
     const answerEntries = firstRecord ? getAnswerEntries(firstRecord) : [];
-    const headers = ['Full name', 'Age', 'Province', 'City / Village', 'Submitted at', ...answerEntries.map((entry) => entry.label)];
+    const headers = ['Full name', 'Contact number', 'Email', 'City / Village', 'Submitted at', ...answerEntries.map((entry) => entry.label)];
     const escapeCsv = (value: unknown) => `"${String(value ?? '').replaceAll('"', '""')}"`;
     const rows = responsePage.items.map((record) => [
       record.full_name,
-      record.age,
-      record.province,
+      displayAnswer(record.answers.contact),
+      displayAnswer(record.answers.email),
       record.district,
       record.submitted_at,
       ...answerEntries.map((entry) => {
@@ -251,7 +251,7 @@ export default function AdminDashboard() {
 
             {activeView === 'questions' ? <AdminQuestionManager /> : activeView === 'website' ? <AdminSiteManager /> : <>
             <div className="admin-toolbar">
-              <label className="admin-search"><Search size={16} /><input type="search" placeholder="Search name or district" value={search} onChange={(event) => { setSearch(event.target.value); setPage(1); }} /></label>
+              <label className="admin-search"><Search size={16} /><input type="search" placeholder="Search name, number, email or district" value={search} onChange={(event) => { setSearch(event.target.value); setPage(1); }} /></label>
               <label className="admin-filter-label"><span>Province</span><select value={province} onChange={(event) => { setProvince(event.target.value); setPage(1); }}><option value="">All provinces</option>{provinces.map((item) => <option key={item} value={item}>{item}</option>)}</select></label>
               <label className="admin-filter-label"><span>Rows</span><select value={pageSize} onChange={(event) => { setPageSize(Number(event.target.value)); setPage(1); }}>{pageSizes.map((size) => <option key={size} value={size}>{size}</option>)}</select></label>
             </div>
@@ -259,7 +259,7 @@ export default function AdminDashboard() {
             {error && <p className="admin-error admin-page-error" role="alert">{error}</p>}
             <div className="admin-table-frame">
               <table className="admin-table">
-                <thead><tr><th>Respondent</th><th>Age</th><th>Province</th><th>City / Village</th><th>Submitted</th><th>Details</th></tr></thead>
+                <thead><tr><th>Respondent</th><th>Contact number</th><th>Email</th><th>City / Village</th><th>Submitted</th><th>Details</th></tr></thead>
                 <tbody>
                   {responsePage?.items.map((record) => (
                     <FragmentRow
@@ -294,8 +294,8 @@ function FragmentRow({ record, isExpanded, onToggle }: { record: SurveyRecord; i
     <>
       <tr>
         <td className="admin-respondent" data-label="Respondent">{record.full_name}</td>
-        <td data-label="Age">{record.age}</td>
-        <td data-label="Province">{record.province}</td>
+        <td data-label="Contact number">{displayAnswer(record.answers.contact)}</td>
+        <td data-label="Email">{displayAnswer(record.answers.email)}</td>
         <td data-label="City / Village">{record.district}</td>
         <td data-label="Submitted">{formatDate(record.submitted_at)}</td>
         <td><button className="admin-view-button" aria-expanded={isExpanded} onClick={onToggle}>{isExpanded ? <X size={15} /> : <Eye size={15} />}{isExpanded ? 'Close' : 'View'}</button></td>

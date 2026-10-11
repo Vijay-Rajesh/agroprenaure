@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { surveyOptions, surveyQuestions } from '@/lib/survey-form';
+import { surveyQuestions } from '@/lib/survey-form';
 
 const values = (options: readonly { en: string }[]) => options.map(({ en }) => en);
 const questionValues = (key: string) => values(surveyQuestions.find((question) => question.key === key)?.options ?? []);
@@ -12,26 +12,26 @@ const selectionSchema = (key: string, max?: number, required = true) => {
 
 export const surveyAnswersSchema = z.object({
   fullName: z.string().trim().min(1).max(160),
-  age: z.string().refine((value) => values(surveyOptions.age).includes(value)),
-  gender: z.string().refine((value) => values(surveyOptions.gender).includes(value)),
-  province: z.string().refine((value) => values(surveyOptions.province).includes(value)),
+  age: z.string().max(200),
+  gender: z.string().max(200),
+  province: z.string().max(200),
   district: z.string().trim().min(1).max(160),
   contact: z.string().trim().min(1).max(40),
   email: z.string().trim().email().max(254),
-  category: z.string().refine((value) => values(surveyOptions.category).includes(value)),
+  category: z.string().max(200),
   categoryOther: z.string().max(300),
-  education: z.string().refine((value) => values(surveyOptions.education).includes(value)),
-  occupation: z.string().refine((value) => values(surveyOptions.occupation).includes(value)),
+  education: z.string().max(200),
+  occupation: z.string().max(200),
   occupationOther: z.string().max(300),
-  areaType: z.string().refine((value) => values(surveyOptions.areaType).includes(value)),
-  experience: z.string().refine((value) => values(surveyOptions.experience).includes(value)),
-  landSize: z.string().refine((value) => values(surveyOptions.landSize).includes(value)),
-  irrigation: z.string().refine((value) => values(surveyOptions.irrigation).includes(value)),
+  areaType: z.string().max(200),
+  experience: z.string().max(200),
+  landSize: z.string().max(200),
+  irrigation: z.string().max(200),
   irrigationOther: z.string().max(300),
-  crops: z.array(z.string()).min(1).max(surveyOptions.crops.length).refine((selected) => selected.every((value) => values(surveyOptions.crops).includes(value))),
+  crops: z.array(z.string().max(200)).max(30),
   cropsOther: z.string().max(300),
-  keepsLivestock: z.string().refine((value) => values(surveyOptions.yesNo).includes(value)),
-  livestock: z.array(z.string()).max(surveyOptions.livestock.length).refine((selected) => selected.every((value) => values(surveyOptions.livestock).includes(value))),
+  keepsLivestock: z.string().max(200),
+  livestock: z.array(z.string().max(200)).max(30),
   livestockOther: z.string().max(300),
   q1: selectionSchema('q1', 3, false),
   q1Other: z.string().max(1000),
@@ -59,20 +59,11 @@ export const surveyAnswersSchema = z.object({
   customAnswers: z.record(z.string(), z.unknown()),
   consent: z.boolean().refine((value) => value, 'Consent is required.'),
 }).strict().superRefine((answers, context) => {
-  if (answers.category === 'Other' && !answers.categoryOther.trim()) {
-    context.addIssue({ code: 'custom', path: ['categoryOther'], message: 'Please specify your category.' });
-  }
-  if (answers.occupation === 'Other' && !answers.occupationOther.trim()) {
-    context.addIssue({ code: 'custom', path: ['occupationOther'], message: 'Please specify your occupation.' });
-  }
   if (answers.irrigation === 'Other' && !answers.irrigationOther.trim()) {
     context.addIssue({ code: 'custom', path: ['irrigationOther'], message: 'Please specify your irrigation source.' });
   }
   if (answers.crops.includes('Other') && !answers.cropsOther.trim()) {
     context.addIssue({ code: 'custom', path: ['cropsOther'], message: 'Please specify another crop.' });
-  }
-  if (answers.keepsLivestock === 'Yes' && answers.livestock.length === 0) {
-    context.addIssue({ code: 'custom', path: ['livestock'], message: 'Please select your livestock.' });
   }
   if (answers.livestock.includes('Other') && !answers.livestockOther.trim()) {
     context.addIssue({ code: 'custom', path: ['livestockOther'], message: 'Please specify other livestock.' });

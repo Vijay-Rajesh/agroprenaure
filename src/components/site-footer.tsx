@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowUpRight, MessageCircle, Phone, Sprout } from 'lucide-react';
+import { ArrowUpRight, MessageCircle, Phone } from 'lucide-react';
 import { useSiteLanguage } from '@/components/language-provider';
 import { translateSiteText } from '@/lib/site-translations';
 
@@ -36,10 +36,10 @@ export default function SiteFooter() {
   const text = (value: string) => translateSiteText(value, isUrdu);
 
   const socialLinks = [
-    { href: 'https://wa.me/923002008999', label: 'WhatsApp', Icon: MessageCircle },
-    { href: 'https://www.youtube.com/', label: 'YouTube', Icon: YoutubeIcon },
-    { href: 'https://www.facebook.com/', label: 'Facebook', Icon: FacebookIcon },
-    { href: 'https://www.instagram.com/', label: 'Instagram', Icon: InstagramIcon },
+    { href: 'https://wa.me/923002008999', label: 'WhatsApp', className: 'whatsapp', Icon: MessageCircle },
+    { href: 'https://youtube.com/@theagropreneurs?si=WCYIDo3zaPmM0ncJ', label: 'YouTube', className: 'youtube', Icon: YoutubeIcon },
+    { href: 'https://www.facebook.com/share/19bs6skfLZ/', label: 'Facebook', className: 'facebook', Icon: FacebookIcon },
+    { href: 'https://www.instagram.com/invites/contact/?utm_source=ig_contact_invite&utm_medium=copy_link&utm_content=7ru3e8v', label: 'Instagram', className: 'instagram', Icon: InstagramIcon },
   ];
 
   return (
@@ -47,8 +47,8 @@ export default function SiteFooter() {
       <div className="footer-inner mx-auto grid w-full max-w-6xl gap-10 px-5 md:grid-cols-[1.1fr_0.9fr]">
         <div className="footer-brand">
           <Link className="brand brand-light" href="/">
-            <span className="brand-mark"><Sprout size={23} /></span>
-            <strong>The Agropreneurs</strong>
+            <span className="brand-mark"><img src="/logo1.png" alt="The Agropreneurs logo" width={80} height={80} /></span>
+            <span className="brand-copy"><strong>The Agropreneurs</strong><small>{text('SMART | SUSTAINABLE | AGRICULTURE')}</small></span>
           </Link>
           <p>{text('Building a smart, sustainable and food-secure future for Pakistan through community, knowledge and action.')}</p>
         </div>
@@ -56,8 +56,8 @@ export default function SiteFooter() {
           <a href="tel:+923002008999"><Phone size={16} />+92 300 2008999</a>
           <a href="https://www.theagropreneurs.com" target="_blank" rel="noreferrer"><ArrowUpRight size={16} />www.theagropreneurs.com</a>
           <div className="footer-socials" aria-label="Social media links">
-            {socialLinks.map(({ href, label, Icon }) => (
-              <a key={label} href={href} target="_blank" rel="noreferrer" aria-label={label} title={label}>
+            {socialLinks.map(({ href, label, className, Icon }) => (
+              <a key={label} className={className} href={href} target="_blank" rel="noreferrer" aria-label={label} title={label}>
                 <Icon size={16} aria-hidden="true" />
               </a>
             ))}

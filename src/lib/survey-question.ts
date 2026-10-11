@@ -20,6 +20,7 @@ export type SurveyQuestionChoice = {
 
 export type PublicSurveyQuestion = {
   id: string;
+  fieldKey: string | null;
   promptEn: string;
   promptUr: string;
   helpEn: string;
@@ -34,6 +35,7 @@ export type PublicSurveyQuestion = {
 
 export type AdminSurveyQuestion = {
   id: string;
+  field_key: string | null;
   prompt_en: string;
   prompt_ur: string;
   help_en: string;

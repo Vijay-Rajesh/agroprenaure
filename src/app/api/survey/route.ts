@@ -1,6 +1,6 @@
 import { neon } from '@neondatabase/serverless';
 import { z } from 'zod';
-import { surveyAnswersSchema } from '@/lib/survey-schema';
+import { surveyAnswersSchema, type SurveyAnswers } from '@/lib/survey-schema';
 import type { SurveyQuestionChoice, SurveyQuestionType } from '@/lib/survey-question';
 
 export const runtime = 'nodejs';
@@ -10,14 +10,28 @@ const maxRequestSize = 40_000;
 
 type ActiveQuestion = {
   id: string;
+  field_key: string | null;
   question_type: SurveyQuestionType;
   options: SurveyQuestionChoice[];
   max_selections: number | null;
+  step_number: number;
   required: boolean;
 };
 
 function isBlankAnswer(value: unknown) {
   return value === undefined || value === null || (typeof value === 'string' && !value.trim()) || (Array.isArray(value) && value.length === 0);
+}
+
+function isProfileQuestionVisible(fieldKey: string, answers: SurveyAnswers) {
+  if (fieldKey === 'categoryOther') return answers.category === 'Other';
+  if (fieldKey === 'occupationOther') return answers.occupation === 'Other';
+  if (fieldKey === 'irrigationOther') return answers.irrigation === 'Other';
+  if (fieldKey === 'cropsOther') return Array.isArray(answers.crops) && answers.crops.includes('Other');
+  if (fieldKey === 'livestock') return answers.keepsLivestock === 'Yes';
+  if (fieldKey === 'livestockOther') {
+    return answers.keepsLivestock === 'Yes' && Array.isArray(answers.livestock) && answers.livestock.includes('Other');
+  }
+  return true;
 }
 
 function isValidManagedAnswer(question: ActiveQuestion, answer: unknown) {
@@ -84,16 +98,18 @@ export async function POST(request: Request) {
     const sql = neon(process.env.DATABASE_URL);
     const answers = parsed.data.answers;
     const questionRows = await sql`
-      SELECT id, question_type, options, max_selections, required
+      SELECT id, field_key, question_type, options, max_selections, required, step_number
       FROM survey_questions
       WHERE is_active = TRUE
     `;
     const activeQuestions: ActiveQuestion[] = questionRows.map((question) => ({
       id: String(question.id),
+      field_key: typeof question.field_key === 'string' ? question.field_key : null,
       question_type: question.question_type,
       options: question.options as SurveyQuestionChoice[],
       max_selections: question.max_selections === null ? null : Number(question.max_selections),
-      required: Boolean(question.required),
+      step_number: Number(question.step_number),
+      required: Boolean(question.required) && (typeof question.field_key === 'string' || Number(question.step_number) !== 1),
     }));
     const activeQuestionIds = new Set(activeQuestions.map((question) => question.id));
     const managedAnswerIds = Object.keys(answers.customAnswers);
@@ -101,15 +117,25 @@ export async function POST(request: Request) {
       return Response.json({ error: 'The survey questions changed. Reload the page and try again.' }, { status: 400 });
     }
     const invalidQuestion = activeQuestions.find((question) => {
-      const answer = answers.customAnswers[question.id];
+      if (question.field_key && !isProfileQuestionVisible(question.field_key, answers)) return false;
+      const answer = question.field_key
+        ? answers[question.field_key as keyof typeof answers]
+        : answers.customAnswers[question.id];
       if (!isValidManagedAnswer(question, answer)) return true;
       const supportsOther = ['single_choice', 'multiple_choice', 'dropdown'].includes(question.question_type);
       const hasOther = supportsOther && (Array.isArray(answer) ? answer.includes('Other') : answer === 'Other');
-      const otherAnswer = answers.customAnswers[`${question.id}_other`];
-      return hasOther && (typeof otherAnswer !== 'string' || !otherAnswer.trim() || otherAnswer.length > 1000);
+      const otherKey = question.field_key ? `${question.field_key}Other` : `${question.id}_other`;
+      const otherAnswer = question.field_key
+        ? answers[otherKey as keyof typeof answers]
+        : answers.customAnswers[otherKey];
+      return question.required && hasOther && (typeof otherAnswer !== 'string' || !otherAnswer.trim() || otherAnswer.length > 1000);
     });
     if (invalidQuestion) {
       return Response.json({ error: 'Please answer all required additional questions.' }, { status: 400 });
+    }
+    const livestockQuestion = activeQuestions.find((question) => question.field_key === 'livestock');
+    if (answers.keepsLivestock === 'Yes' && livestockQuestion && answers.livestock.length === 0) {
+      return Response.json({ error: 'Please select your livestock.' }, { status: 400 });
     }
 
     const [savedResponse] = await sql`

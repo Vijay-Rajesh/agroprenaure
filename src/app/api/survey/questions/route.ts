@@ -10,7 +10,7 @@ export async function GET() {
   try {
     const sql = neon(process.env.DATABASE_URL);
     const rows = await sql`
-      SELECT id, prompt_en, prompt_ur, help_en, help_ur, question_type, options, max_selections, required, sort_order, step_number
+      SELECT id, field_key, prompt_en, prompt_ur, help_en, help_ur, question_type, options, max_selections, required, sort_order, step_number
       FROM survey_questions
       WHERE is_active = TRUE
       ORDER BY sort_order ASC, created_at ASC
@@ -19,6 +19,7 @@ export async function GET() {
       .filter((row) => surveyQuestionTypes.includes(row.question_type))
       .map((row) => ({
         id: String(row.id),
+        fieldKey: typeof row.field_key === 'string' ? row.field_key : null,
         promptEn: String(row.prompt_en),
         promptUr: String(row.prompt_ur),
         helpEn: String(row.help_en),
@@ -26,7 +27,9 @@ export async function GET() {
         type: row.question_type,
         options: row.options,
         maxSelections: row.max_selections === null ? null : Number(row.max_selections),
-        required: Boolean(row.required),
+        required: row.field_key === null
+          ? Boolean(row.required) && Number(row.step_number) !== 1
+          : Boolean(row.required),
         sortOrder: Number(row.sort_order),
         stepNumber: Number(row.step_number),
       }));

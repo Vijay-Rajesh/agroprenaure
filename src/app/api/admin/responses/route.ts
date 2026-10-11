@@ -44,7 +44,8 @@ export async function GET(request: Request) {
   try {
     const sql = neon(process.env.DATABASE_URL);
     const filters = sql`
-      WHERE (${search === ''} OR full_name ILIKE ${pattern} OR district ILIKE ${pattern} OR province ILIKE ${pattern})
+      WHERE (${search === ''} OR full_name ILIKE ${pattern} OR district ILIKE ${pattern} OR province ILIKE ${pattern}
+        OR answers->>'contact' ILIKE ${pattern} OR answers->>'email' ILIKE ${pattern})
         AND (${province === ''} OR province = ${province})
     `;
     const [countRows] = await Promise.all([

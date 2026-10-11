@@ -6,4 +6,4 @@ ALTER TABLE survey_responses
 
 ALTER TABLE survey_responses
   ADD CONSTRAINT survey_responses_age_check
-  CHECK (char_length(age) BETWEEN 1 AND 40);
+  CHECK (char_length(age) BETWEEN 0 AND 40);

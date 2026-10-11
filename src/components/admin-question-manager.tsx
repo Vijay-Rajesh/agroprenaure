@@ -6,6 +6,7 @@ import { questionUsesChoices, surveyQuestionTypes, type AdminSurveyQuestion, typ
 import { surveySteps } from '@/lib/survey-form';
 
 type QuestionDraft = {
+  field_key: string | null;
   prompt_en: string;
   prompt_ur: string;
   help_en: string;
@@ -19,6 +20,7 @@ type QuestionDraft = {
 };
 
 const emptyDraft: QuestionDraft = {
+  field_key: null,
   prompt_en: '',
   prompt_ur: '',
   help_en: '',
@@ -87,7 +89,7 @@ export default function AdminQuestionManager() {
 
   function beginNewQuestion() {
     setEditingId(null);
-    setDraft({ ...emptyDraft });
+    setDraft({ ...emptyDraft, options: [] });
     setError('');
     setNotice('');
   }
@@ -95,6 +97,7 @@ export default function AdminQuestionManager() {
   function beginEdit(question: AdminSurveyQuestion) {
     setEditingId(question.id);
     setDraft({
+      field_key: question.field_key,
       prompt_en: question.prompt_en,
       prompt_ur: question.prompt_ur,
       help_en: question.help_en,
@@ -136,6 +139,7 @@ export default function AdminQuestionManager() {
     setError('');
     setNotice('');
     const payload = {
+      field_key: draft.field_key,
       prompt_en: draft.prompt_en,
       prompt_ur: draft.prompt_ur,
       help_en: draft.help_en,
@@ -143,7 +147,7 @@ export default function AdminQuestionManager() {
       question_type: draft.question_type,
       options: draft.options,
       max_selections: draft.max_selections,
-      required: draft.required,
+      required: isCorePersonalField || isPersonalOptional ? isCorePersonalField : draft.required,
       step_number: draft.step_number,
     };
     try {
@@ -184,11 +188,14 @@ export default function AdminQuestionManager() {
   }
 
   const usesChoices = draft ? questionUsesChoices(draft.question_type) : false;
+  const isBuiltIn = Boolean(draft?.field_key);
+  const isCorePersonalField = ['fullName', 'contact', 'district', 'email'].includes(draft?.field_key ?? '');
+  const isPersonalOptional = draft?.step_number === 1 && !isCorePersonalField;
 
   return (
     <section className="admin-question-manager" aria-labelledby="question-manager-title">
       <div className="admin-question-heading">
-        <div><p className="admin-kicker">FORM BUILDER</p><h2 id="question-manager-title">Survey questions</h2><p>Add, edit, or archive questions without changing the site code.</p></div>
+        <div><p className="admin-kicker">FORM BUILDER</p><h2 id="question-manager-title">Survey questions</h2><p>Edit built-in fields and add or archive extra questions without changing the site code.</p></div>
         {!draft && <button className="button" type="button" onClick={beginNewQuestion}><Plus size={16} />Add question</button>}
       </div>
 
@@ -203,15 +210,16 @@ export default function AdminQuestionManager() {
             <label className="admin-question-field" dir="rtl"><span>سوال اردو میں *</span><textarea className="admin-question-input" value={draft.prompt_ur} onChange={(event) => setDraft({ ...draft, prompt_ur: event.target.value })} maxLength={500} rows={2} required /></label>
             <label className="admin-question-field"><span>Instructions (English)</span><input className="admin-question-input" value={draft.help_en} onChange={(event) => setDraft({ ...draft, help_en: event.target.value })} maxLength={300} /></label>
             <label className="admin-question-field" dir="rtl"><span>ہدایات (اردو)</span><input className="admin-question-input" value={draft.help_ur} onChange={(event) => setDraft({ ...draft, help_ur: event.target.value })} maxLength={300} /></label>
-            <label className="admin-question-field"><span>Answer type</span><select className="admin-question-input" value={draft.question_type} onChange={(event) => updateType(event.target.value as SurveyQuestionType)}>{surveyQuestionTypes.map((type) => <option key={type} value={type}>{typeLabels[type]}</option>)}</select></label>
-            <label className="admin-question-field"><span>Form step</span><select className="admin-question-input" value={draft.step_number} onChange={(event) => setDraft({ ...draft, step_number: Number(event.target.value) })}>{surveySteps.map((formStep, index) => <option key={formStep.en} value={index + 1}>Step {index + 1}: {formStep.en}</option>)}</select></label>
+            <label className="admin-question-field"><span>Answer type</span><select className="admin-question-input" value={draft.question_type} onChange={(event) => updateType(event.target.value as SurveyQuestionType)} disabled={isBuiltIn}>{surveyQuestionTypes.map((type) => <option key={type} value={type}>{typeLabels[type]}</option>)}</select></label>
+            <label className="admin-question-field"><span>Form step</span><select className="admin-question-input" value={draft.step_number} onChange={(event) => setDraft({ ...draft, step_number: Number(event.target.value) })} disabled={isBuiltIn}>{surveySteps.map((formStep, index) => <option key={formStep.en} value={index + 1}>Step {index + 1}: {formStep.en}</option>)}</select></label>
             {draft.question_type === 'multiple_choice' && <label className="admin-question-field"><span>Maximum selections (optional)</span><input className="admin-question-input" type="number" min="1" max={draft.options.length} value={draft.max_selections ?? ''} onChange={(event) => setDraft({ ...draft, max_selections: event.target.value ? Number(event.target.value) : null })} /></label>}
-            <label className="admin-question-required"><input type="checkbox" checked={draft.required} onChange={(event) => setDraft({ ...draft, required: event.target.checked })} /><span>Response required</span></label>
+            <label className="admin-question-required"><input type="checkbox" checked={isCorePersonalField || !isPersonalOptional && draft.required} disabled={isCorePersonalField || isBuiltIn || isPersonalOptional} onChange={(event) => setDraft({ ...draft, required: event.target.checked })} /><span>{isCorePersonalField ? 'Required (cannot be changed)' : isPersonalOptional ? 'Optional in Personal Information' : isBuiltIn ? `${draft.required ? 'Required' : 'Optional'} (cannot be changed)` : 'Response required'}</span></label>
           </div>
+          {isBuiltIn && <p className="question-instruction">Built-in fields stay in their original form step and cannot be archived. Their labels and choices are editable.</p>}
 
           {usesChoices && <div className="admin-option-editor">
             <div className="admin-option-heading"><h4>Answer choices</h4><button className="admin-text-button" type="button" disabled={draft.options.length >= 30} onClick={() => setDraft({ ...draft, options: [...draft.options, { en: '', ur: '' }] })}><Plus size={14} />Add choice</button></div>
-            {draft.options.map((choice, index) => <div className="admin-option-row" key={`choice-${index}`}><label className="admin-question-field"><span>English choice {index + 1}</span><input className="admin-question-input" value={choice.en} onChange={(event) => updateChoice(index, 'en', event.target.value)} maxLength={200} required /></label><label className="admin-question-field" dir="rtl"><span>اردو آپشن {index + 1}</span><input className="admin-question-input" value={choice.ur} onChange={(event) => updateChoice(index, 'ur', event.target.value)} maxLength={200} required /></label><button className="admin-icon-button" type="button" aria-label={`Remove choice ${index + 1}`} disabled={draft.options.length <= 2} onClick={() => setDraft({ ...draft, options: draft.options.filter((_, choiceIndex) => choiceIndex !== index) })}><X size={15} /></button></div>)}
+            {draft.options.map((choice, index) => <div className="admin-option-row" key={`choice-${index}`}><label className="admin-question-field"><span>English choice {index + 1}</span><input className="admin-question-input" value={choice.en} onChange={(event) => updateChoice(index, 'en', event.target.value)} maxLength={200} required disabled={isBuiltIn && choice.en === 'Other'} /></label><label className="admin-question-field" dir="rtl"><span>اردو آپشن {index + 1}</span><input className="admin-question-input" value={choice.ur} onChange={(event) => updateChoice(index, 'ur', event.target.value)} maxLength={200} required /></label><button className="admin-icon-button" type="button" aria-label={`Remove choice ${index + 1}`} disabled={draft.options.length <= 2 || isBuiltIn && choice.en === 'Other'} onClick={() => setDraft({ ...draft, options: draft.options.filter((_, choiceIndex) => choiceIndex !== index) })}><X size={15} /></button></div>)}
           </div>}
 
           <div className="admin-question-form-actions"><button className="button button-outline" type="button" disabled={isSaving} onClick={() => setDraft(null)}>Cancel</button><button className="button" type="submit" disabled={isSaving}>{isSaving ? 'Saving…' : 'Save question'}{isSaving ? null : <Check size={15} />}</button></div>
@@ -229,6 +237,7 @@ export default function AdminQuestionManager() {
               <span className="admin-question-number" aria-label={`Question ${index + 1}`}>{String(index + 1).padStart(2, '0')}</span>
               <div className="admin-question-item-copy">
                 <div className="admin-question-meta">
+                  {question.field_key && <span className="admin-question-tag">Built-in field</span>}
                   <span className="admin-question-tag">{typeLabels[question.question_type]}</span>
                   <span className="admin-question-tag">Step {question.step_number}: {surveySteps[question.step_number - 1]?.en ?? 'Survey'}</span>
                   <span className={`admin-question-tag ${question.required ? 'is-required' : ''}`}>{question.required ? 'Required' : 'Optional'}</span>
@@ -249,7 +258,7 @@ export default function AdminQuestionManager() {
                 </div>
                 {question.options.length > 0 && <div className="admin-question-options"><span className="admin-question-options-label">Answer choices</span><div>{question.options.map((option, optionIndex) => <span className="admin-question-option" key={`${question.id}-option-${optionIndex}`}>{option.en}<b aria-hidden="true">/</b><span dir="rtl">{option.ur}</span></span>)}</div></div>}
               </div>
-              <div className="admin-question-item-actions"><button className="admin-icon-button" type="button" aria-label={`Edit ${question.prompt_en}`} onClick={() => beginEdit(question)}><Pencil size={15} /></button><button className="admin-icon-button" type="button" aria-label={question.is_active ? `Archive ${question.prompt_en}` : `Restore ${question.prompt_en}`} onClick={() => setQuestionActive(question, !question.is_active)}>{question.is_active ? <Archive size={15} /> : <RotateCcw size={15} />}</button></div>
+              <div className="admin-question-item-actions"><button className="admin-icon-button" type="button" aria-label={`Edit ${question.prompt_en}`} onClick={() => beginEdit(question)}><Pencil size={15} /></button>{!question.field_key && <button className="admin-icon-button" type="button" aria-label={question.is_active ? `Archive ${question.prompt_en}` : `Restore ${question.prompt_en}`} onClick={() => setQuestionActive(question, !question.is_active)}>{question.is_active ? <Archive size={15} /> : <RotateCcw size={15} />}</button>}</div>
             </li>
           ))}
         </ul>

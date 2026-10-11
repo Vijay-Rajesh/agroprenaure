@@ -13,6 +13,7 @@ const choiceSchema = z.object({
 }).strict();
 
 const questionSchema = z.object({
+  field_key: z.string().max(40).nullable().optional(),
   prompt_en: z.string().trim().min(1).max(500),
   prompt_ur: z.string().trim().min(1).max(500),
   help_en: z.string().max(300),
@@ -73,7 +74,9 @@ export async function GET() {
   try {
     const sql = neon(process.env.DATABASE_URL);
     const questions = await sql`
-      SELECT id, prompt_en, prompt_ur, help_en, help_ur, question_type, options, max_selections, required, sort_order, step_number, is_active
+      SELECT id, field_key, prompt_en, prompt_ur, help_en, help_ur, question_type, options, max_selections,
+        CASE WHEN field_key IS NULL AND step_number = 1 THEN FALSE ELSE required END AS required,
+        sort_order, step_number, is_active
       FROM survey_questions
       ORDER BY sort_order ASC, created_at ASC
     `;
@@ -94,10 +97,12 @@ export async function POST(request: Request) {
 
   const parsed = await parseQuestionBody(request);
   if ('error' in parsed) return response({ error: parsed.error }, 400);
+  if (parsed.data.field_key) return response({ error: 'Built-in field keys are reserved.' }, 400);
 
   try {
     const sql = neon(process.env.DATABASE_URL);
     const [position] = await sql`SELECT COALESCE(MAX(sort_order), -1) + 1 AS next_order FROM survey_questions`;
+    const isCorePersonalField = ['fullName', 'contact', 'district', 'email'].includes(parsed.data.field_key ?? '');
     const [question] = await sql`
       INSERT INTO survey_questions (prompt_en, prompt_ur, help_en, help_ur, question_type, options, max_selections, required, sort_order, step_number)
       VALUES (
@@ -108,7 +113,7 @@ export async function POST(request: Request) {
         ${parsed.data.question_type},
         ${JSON.stringify(parsed.data.options)}::jsonb,
         ${parsed.data.max_selections},
-        ${parsed.data.required},
+        ${isCorePersonalField || parsed.data.step_number !== 1 && parsed.data.required},
         ${Number(position.next_order)},
         ${parsed.data.step_number}
       )
@@ -144,7 +149,7 @@ export async function PATCH(request: Request) {
       const sql = neon(process.env.DATABASE_URL);
       const result = await sql`
         UPDATE survey_questions SET is_active = ${parsed.data.is_active}, updated_at = now()
-        WHERE id = ${parsed.data.id} RETURNING id
+        WHERE id = ${parsed.data.id} AND field_key IS NULL RETURNING id
       `;
       return result.length ? response({ success: true }, 200) : response({ error: 'Question not found.' }, 404);
     } catch (error) {
@@ -162,6 +167,23 @@ export async function PATCH(request: Request) {
 
   try {
     const sql = neon(process.env.DATABASE_URL);
+    const [existingQuestion] = await sql`SELECT field_key, question_type, step_number FROM survey_questions WHERE id = ${fullBody.data.id}`;
+    if (!existingQuestion) return response({ error: 'Question not found.' }, 404);
+    const fieldKey = typeof existingQuestion.field_key === 'string' ? existingQuestion.field_key : null;
+    if ((fullBody.data.field_key ?? null) !== fieldKey) return response({ error: 'Built-in field keys cannot be changed.' }, 400);
+    if (fieldKey && (fullBody.data.question_type !== existingQuestion.question_type || fullBody.data.step_number !== Number(existingQuestion.step_number))) {
+      return response({ error: 'Built-in fields cannot change their answer type or survey step.' }, 400);
+    }
+    if (fieldKey && fullBody.data.required !== Boolean(existingQuestion.required)) {
+      return response({ error: 'Built-in fields cannot change their required status.' }, 400);
+    }
+    if (['fullName', 'contact', 'district', 'email'].includes(fieldKey ?? '') && !fullBody.data.required) {
+      return response({ error: 'The first four personal information fields must remain required.' }, 400);
+    }
+    const otherChoiceFieldKeys = ['category', 'occupation', 'irrigation', 'crops', 'livestock'];
+    if (fieldKey && otherChoiceFieldKeys.includes(fieldKey) && !fullBody.data.options.some((option) => option.en === 'Other')) {
+      return response({ error: 'The Other choice must remain available for this field.' }, 400);
+    }
     const result = await sql`
       UPDATE survey_questions
       SET prompt_en = ${fullBody.data.prompt_en},
@@ -171,7 +193,7 @@ export async function PATCH(request: Request) {
           question_type = ${fullBody.data.question_type},
           options = ${JSON.stringify(fullBody.data.options)}::jsonb,
           max_selections = ${fullBody.data.max_selections},
-          required = ${fullBody.data.required},
+          required = ${fieldKey ? Boolean(existingQuestion.required) : fullBody.data.step_number === 1 ? false : fullBody.data.required},
           step_number = ${fullBody.data.step_number},
           updated_at = now()
       WHERE id = ${fullBody.data.id}

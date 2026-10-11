@@ -261,15 +261,50 @@ export default function SurveyExperience({ formOnly = false }: { formOnly?: bool
     return isUrdu ? option.ur : option.en;
   }
 
+  function profileQuestion(fieldKey: string) {
+    return managedQuestions.find((question) => question.fieldKey === fieldKey);
+  }
+
+  function profileLabel(fieldKey: string, fallback: SurveyOption): SurveyOption {
+    const question = profileQuestion(fieldKey);
+    return question ? { en: question.promptEn, ur: question.promptUr } : fallback;
+  }
+
+  function profileOptions(fieldKey: string, fallback: readonly SurveyOption[]): readonly SurveyOption[] {
+    const question = profileQuestion(fieldKey);
+    return question?.options.length ? question.options : fallback;
+  }
+
+  function profileRequired(fieldKey: string, fallback: boolean) {
+    return profileQuestion(fieldKey)?.required ?? fallback;
+  }
+
+  function profileQuestionIsVisible(fieldKey: string) {
+    if (fieldKey === 'categoryOther') return answers.category === 'Other';
+    if (fieldKey === 'occupationOther') return answers.occupation === 'Other';
+    if (fieldKey === 'irrigationOther') return answers.irrigation === 'Other';
+    if (fieldKey === 'cropsOther') return answers.crops.includes('Other');
+    if (fieldKey === 'livestock') return answers.keepsLivestock === 'Yes';
+    if (fieldKey === 'livestockOther') return answers.keepsLivestock === 'Yes' && answers.livestock.includes('Other');
+    return true;
+  }
+
   function managedQuestionIsValid(question: PublicSurveyQuestion) {
-    const answer = answers.customAnswers[question.id];
+    if (question.fieldKey && !profileQuestionIsVisible(question.fieldKey)) return true;
+    const required = question.required;
+    const answer = question.fieldKey
+      ? answers[question.fieldKey as keyof SurveyAnswers]
+      : answers.customAnswers[question.id];
     const isBlank = answer === undefined || answer === null || (typeof answer === 'string' && !answer.trim()) || (Array.isArray(answer) && answer.length === 0);
-    if (isBlank) return !question.required;
+    if (isBlank) return !required;
     const optionValues = question.options.map((option) => option.en);
     const supportsOther = questionUsesChoices(question.type) || question.type === 'yes_no' || question.type === 'rating';
     const selectedOther = supportsOther && (Array.isArray(answer) ? answer.includes('Other') : answer === 'Other');
-    const otherAnswer = answers.customAnswers[`${question.id}_other`];
-    if (selectedOther && (typeof otherAnswer !== 'string' || !otherAnswer.trim())) return false;
+    const otherKey = question.fieldKey ? `${question.fieldKey}Other` : `${question.id}_other`;
+    const otherAnswer = question.fieldKey
+      ? answers[otherKey as keyof SurveyAnswers]
+      : answers.customAnswers[otherKey];
+    if (required && selectedOther && (typeof otherAnswer !== 'string' || !otherAnswer.trim())) return false;
 
     switch (question.type) {
       case 'short_text':
@@ -294,19 +329,22 @@ export default function SurveyExperience({ formOnly = false }: { formOnly?: bool
   }
 
   function renderManagedQuestion(question: PublicSurveyQuestion, questionNumber: number) {
+    const required = question.required;
     const label = { en: question.promptEn, ur: question.promptUr };
-    const answer = answers.customAnswers[question.id];
+    const answer = question.fieldKey
+      ? answers[question.fieldKey as keyof SurveyAnswers]
+      : answers.customAnswers[question.id];
     const otherKey = `${question.id}_other`;
     const supportsOther = questionUsesChoices(question.type) || question.type === 'yes_no' || question.type === 'rating';
     const selectedOther = supportsOther && (Array.isArray(answer) ? answer.includes('Other') : answer === 'Other');
-    const requiredMark = question.required ? ' *' : ` (${translate(surveyLabels.optional)})`;
+    const requiredMark = required ? ' *' : ` (${translate(surveyLabels.optional)})`;
     const options = question.options;
     const instruction = { en: question.helpEn, ur: question.helpUr };
     const hasInstruction = Boolean(instruction.en || instruction.ur);
 
     function renderOtherField() {
       if (!selectedOther) return null;
-      return <label className="field-label question-other-field"><span className="field-title"><BilingualText value={surveyLabels.otherResponse} isUrdu={isUrdu} /> *</span><textarea className="form-control textarea-control" value={typeof answers.customAnswers[otherKey] === 'string' ? answers.customAnswers[otherKey] as string : ''} onChange={(event) => updateManagedAnswer(otherKey, event.target.value)} rows={2} maxLength={1000} required /></label>;
+      return <label className="field-label question-other-field"><span className="field-title"><BilingualText value={surveyLabels.otherResponse} isUrdu={isUrdu} />{required ? ' *' : ` (${translate(surveyLabels.optional)})`}</span><textarea className="form-control textarea-control" value={typeof answers.customAnswers[otherKey] === 'string' ? answers.customAnswers[otherKey] as string : ''} onChange={(event) => updateManagedAnswer(otherKey, event.target.value)} rows={2} maxLength={1000} required={required} /></label>;
     }
 
     if (question.type === 'multiple_choice') {
@@ -321,16 +359,16 @@ export default function SurveyExperience({ formOnly = false }: { formOnly?: bool
       return <fieldset className="choice-fieldset" key={question.id}><legend>{questionNumber}. <BilingualText value={label} isUrdu={isUrdu} />{requiredMark}</legend>{hasInstruction && <p className="question-instruction"><BilingualText value={instruction} isUrdu={isUrdu} /></p>}<RadioGrid name={`managed-${question.id}`} options={choices} selected={typeof answer === 'string' ? answer : ''} onSelect={(value) => updateManagedAnswer(question.id, value)} isUrdu={isUrdu} />{renderOtherField()}</fieldset>;
     }
     if (question.type === 'dropdown') {
-      return <div className="managed-dropdown-field" key={question.id}>{hasInstruction && <p className="question-instruction"><BilingualText value={instruction} isUrdu={isUrdu} /></p>}<SelectField label={{ ...label, en: `${questionNumber}. ${label.en}`, ur: `${questionNumber}. ${label.ur}` }} value={typeof answer === 'string' ? answer : ''} options={options} onChange={(value) => updateManagedAnswer(question.id, value)} isUrdu={isUrdu} required={question.required} />{renderOtherField()}</div>;
+      return <div className="managed-dropdown-field" key={question.id}>{hasInstruction && <p className="question-instruction"><BilingualText value={instruction} isUrdu={isUrdu} /></p>}<SelectField label={{ ...label, en: `${questionNumber}. ${label.en}`, ur: `${questionNumber}. ${label.ur}` }} value={typeof answer === 'string' ? answer : ''} options={options} onChange={(value) => updateManagedAnswer(question.id, value)} isUrdu={isUrdu} required={required} />{renderOtherField()}</div>;
     }
     if (question.type === 'long_text') {
-      return <label className="field-label" key={question.id}><span className="field-title">{questionNumber}. <BilingualText value={label} isUrdu={isUrdu} />{requiredMark}</span>{hasInstruction && <span className="question-instruction"><BilingualText value={instruction} isUrdu={isUrdu} /></span>}<textarea className="form-control textarea-control" value={typeof answer === 'string' ? answer : ''} onChange={(event) => updateManagedAnswer(question.id, event.target.value)} rows={3} maxLength={5000} required={question.required} /></label>;
+      return <label className="field-label" key={question.id}><span className="field-title">{questionNumber}. <BilingualText value={label} isUrdu={isUrdu} />{requiredMark}</span>{hasInstruction && <span className="question-instruction"><BilingualText value={instruction} isUrdu={isUrdu} /></span>}<textarea className="form-control textarea-control" value={typeof answer === 'string' ? answer : ''} onChange={(event) => updateManagedAnswer(question.id, event.target.value)} rows={3} maxLength={5000} required={required} /></label>;
     }
-    return <div className="managed-dropdown-field" key={question.id}>{hasInstruction && <p className="question-instruction"><BilingualText value={instruction} isUrdu={isUrdu} /></p>}<TextField label={{ ...label, en: `${questionNumber}. ${label.en}`, ur: `${questionNumber}. ${label.ur}` }} value={typeof answer === 'string' ? answer : ''} onChange={(value) => updateManagedAnswer(question.id, value)} type={question.type === 'number' || question.type === 'email' || question.type === 'date' ? question.type : 'text'} optional={!question.required} maxLength={question.type === 'email' ? 254 : 5000} isUrdu={isUrdu} /></div>;
+    return <div className="managed-dropdown-field" key={question.id}>{hasInstruction && <p className="question-instruction"><BilingualText value={instruction} isUrdu={isUrdu} /></p>}<TextField label={{ ...label, en: `${questionNumber}. ${label.en}`, ur: `${questionNumber}. ${label.ur}` }} value={typeof answer === 'string' ? answer : ''} onChange={(value) => updateManagedAnswer(question.id, value)} type={question.type === 'number' || question.type === 'email' || question.type === 'date' ? question.type : 'text'} optional={!required} maxLength={question.type === 'email' ? 254 : 5000} isUrdu={isUrdu} /></div>;
   }
 
   const profileValidity = [
-    Boolean(answers.fullName.trim() && answers.contact.trim() && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(answers.email) && answers.district.trim() && answers.age && answers.gender && answers.province && answers.category && (answers.category !== 'Other' || answers.categoryOther.trim()) && answers.education && answers.occupation && (answers.occupation !== 'Other' || answers.occupationOther.trim()) && answers.areaType),
+    Boolean(answers.fullName.trim() && answers.contact.trim() && answers.district.trim() && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(answers.email)),
     Boolean(answers.experience && answers.landSize && answers.irrigation && (answers.irrigation !== 'Other' || answers.irrigationOther.trim()) && answers.crops.length && (!answers.crops.includes('Other') || answers.cropsOther.trim()) && answers.keepsLivestock && (answers.keepsLivestock !== 'Yes' || answers.livestock.length > 0) && (!answers.livestock.includes('Other') || answers.livestockOther.trim())),
   ];
   const totalSteps = surveySteps.length;
@@ -483,36 +521,36 @@ export default function SurveyExperience({ formOnly = false }: { formOnly?: bool
                 <div className="survey-fields">
                   {step === 0 && (
                     <div className="form-grid">
-                      <TextField label={surveyLabels.fullName} value={answers.fullName} onChange={(value) => update('fullName', value)} isUrdu={isUrdu} />
-                      <TextField label={surveyLabels.contact} value={answers.contact} onChange={(value) => update('contact', value)} type="tel" isUrdu={isUrdu} />
-                      <TextField label={surveyLabels.district} value={answers.district} onChange={(value) => update('district', value)} isUrdu={isUrdu} />
-                      <TextField label={surveyLabels.email} value={answers.email} onChange={(value) => update('email', value)} type="email" isUrdu={isUrdu} />
-                      <SelectField label={surveyLabels.province} value={answers.province} onChange={(value) => update('province', value)} options={surveyOptions.province} isUrdu={isUrdu} />
-                      <SelectField label={surveyLabels.age} value={answers.age} onChange={(value) => update('age', value)} options={surveyOptions.age} isUrdu={isUrdu} />
-                      <SelectField label={surveyLabels.category} value={answers.category} onChange={(value) => update('category', value)} options={surveyOptions.category} isUrdu={isUrdu} />
-                      {answers.category === 'Other' && <TextField label={surveyLabels.categoryOther} value={answers.categoryOther} onChange={(value) => update('categoryOther', value)} isUrdu={isUrdu} />}
-                      <SelectField label={surveyLabels.gender} value={answers.gender} onChange={(value) => update('gender', value)} options={surveyOptions.gender} isUrdu={isUrdu} />
-                      <SelectField label={surveyLabels.education} value={answers.education} onChange={(value) => update('education', value)} options={surveyOptions.education} isUrdu={isUrdu} />
-                      <SelectField label={surveyLabels.occupation} value={answers.occupation} onChange={(value) => update('occupation', value)} options={surveyOptions.occupation} isUrdu={isUrdu} />
-                      {answers.occupation === 'Other' && <TextField label={surveyLabels.occupationOther} value={answers.occupationOther} onChange={(value) => update('occupationOther', value)} isUrdu={isUrdu} />}
-                      <SelectField label={surveyLabels.areaType} value={answers.areaType} onChange={(value) => update('areaType', value)} options={surveyOptions.areaType} isUrdu={isUrdu} />
+                      <TextField label={profileLabel('fullName', surveyLabels.fullName)} value={answers.fullName} onChange={(value) => update('fullName', value)} isUrdu={isUrdu} />
+                      <TextField label={profileLabel('contact', surveyLabels.contact)} value={answers.contact} onChange={(value) => update('contact', value)} type="tel" isUrdu={isUrdu} />
+                      <TextField label={profileLabel('district', surveyLabels.district)} value={answers.district} onChange={(value) => update('district', value)} isUrdu={isUrdu} />
+                      <TextField label={profileLabel('email', surveyLabels.email)} value={answers.email} onChange={(value) => update('email', value)} type="email" isUrdu={isUrdu} />
+                      <SelectField label={profileLabel('province', surveyLabels.province)} value={answers.province} onChange={(value) => update('province', value)} options={profileOptions('province', surveyOptions.province)} isUrdu={isUrdu} required={profileRequired('province', false)} />
+                      <SelectField label={profileLabel('age', surveyLabels.age)} value={answers.age} onChange={(value) => update('age', value)} options={profileOptions('age', surveyOptions.age)} isUrdu={isUrdu} required={profileRequired('age', false)} />
+                      <SelectField label={profileLabel('category', surveyLabels.category)} value={answers.category} onChange={(value) => update('category', value)} options={profileOptions('category', surveyOptions.category)} isUrdu={isUrdu} required={profileRequired('category', false)} />
+                      {answers.category === 'Other' && <TextField label={profileLabel('categoryOther', surveyLabels.categoryOther)} value={answers.categoryOther} onChange={(value) => update('categoryOther', value)} isUrdu={isUrdu} optional />}
+                      <SelectField label={profileLabel('gender', surveyLabels.gender)} value={answers.gender} onChange={(value) => update('gender', value)} options={profileOptions('gender', surveyOptions.gender)} isUrdu={isUrdu} required={profileRequired('gender', false)} />
+                      <SelectField label={profileLabel('education', surveyLabels.education)} value={answers.education} onChange={(value) => update('education', value)} options={profileOptions('education', surveyOptions.education)} isUrdu={isUrdu} required={profileRequired('education', false)} />
+                      <SelectField label={profileLabel('occupation', surveyLabels.occupation)} value={answers.occupation} onChange={(value) => update('occupation', value)} options={profileOptions('occupation', surveyOptions.occupation)} isUrdu={isUrdu} required={profileRequired('occupation', false)} />
+                      {answers.occupation === 'Other' && <TextField label={profileLabel('occupationOther', surveyLabels.occupationOther)} value={answers.occupationOther} onChange={(value) => update('occupationOther', value)} isUrdu={isUrdu} optional />}
+                      <SelectField label={profileLabel('areaType', surveyLabels.areaType)} value={answers.areaType} onChange={(value) => update('areaType', value)} options={profileOptions('areaType', surveyOptions.areaType)} isUrdu={isUrdu} required={profileRequired('areaType', false)} />
                     </div>
                   )}
 
                   {step === 1 && <>
                     <div className="form-grid">
-                      <SelectField label={surveyLabels.experience} value={answers.experience} onChange={(value) => update('experience', value)} options={surveyOptions.experience} isUrdu={isUrdu} />
-                      <SelectField label={surveyLabels.landSize} value={answers.landSize} onChange={(value) => update('landSize', value)} options={surveyOptions.landSize} isUrdu={isUrdu} />
-                      <SelectField label={surveyLabels.irrigation} value={answers.irrigation} onChange={(value) => update('irrigation', value)} options={surveyOptions.irrigation} isUrdu={isUrdu} />
-                      {answers.irrigation === 'Other' && <TextField label={surveyLabels.irrigationOther} value={answers.irrigationOther} onChange={(value) => update('irrigationOther', value)} isUrdu={isUrdu} />}
+                      <SelectField label={profileLabel('experience', surveyLabels.experience)} value={answers.experience} onChange={(value) => update('experience', value)} options={profileOptions('experience', surveyOptions.experience)} isUrdu={isUrdu} required={profileRequired('experience', true)} />
+                      <SelectField label={profileLabel('landSize', surveyLabels.landSize)} value={answers.landSize} onChange={(value) => update('landSize', value)} options={profileOptions('landSize', surveyOptions.landSize)} isUrdu={isUrdu} required={profileRequired('landSize', true)} />
+                      <SelectField label={profileLabel('irrigation', surveyLabels.irrigation)} value={answers.irrigation} onChange={(value) => update('irrigation', value)} options={profileOptions('irrigation', surveyOptions.irrigation)} isUrdu={isUrdu} required={profileRequired('irrigation', true)} />
+                      {answers.irrigation === 'Other' && <TextField label={profileLabel('irrigationOther', surveyLabels.irrigationOther)} value={answers.irrigationOther} onChange={(value) => update('irrigationOther', value)} isUrdu={isUrdu} />}
                     </div>
-                    <fieldset className="choice-fieldset"><legend><BilingualText value={surveyLabels.crops} isUrdu={isUrdu} /> *</legend><ChoiceGrid options={surveyOptions.crops} selected={answers.crops} onToggle={(value) => toggleChoice('crops', value)} isUrdu={isUrdu} /></fieldset>
-                    {answers.crops.includes('Other') && <TextField label={surveyLabels.cropsOther} value={answers.cropsOther} onChange={(value) => update('cropsOther', value)} isUrdu={isUrdu} />}
-                    <fieldset className="choice-fieldset"><legend><BilingualText value={surveyLabels.keepsLivestock} isUrdu={isUrdu} /> *</legend><RadioGrid name="keeps-livestock" options={surveyOptions.yesNo} selected={answers.keepsLivestock} onSelect={(value) => update('keepsLivestock', value)} isUrdu={isUrdu} columns="three-cols" /></fieldset>
-                    {answers.keepsLivestock === 'Yes' && <><fieldset className="choice-fieldset"><legend><BilingualText value={surveyLabels.livestock} isUrdu={isUrdu} /> *</legend><ChoiceGrid options={surveyOptions.livestock} selected={answers.livestock} onToggle={(value) => toggleChoice('livestock', value)} isUrdu={isUrdu} /></fieldset>{answers.livestock.includes('Other') && <TextField label={surveyLabels.livestockOther} value={answers.livestockOther} onChange={(value) => update('livestockOther', value)} isUrdu={isUrdu} />}</>}
+                    <fieldset className="choice-fieldset"><legend><BilingualText value={profileLabel('crops', surveyLabels.crops)} isUrdu={isUrdu} />{profileRequired('crops', true) ? ' *' : ` (${translate(surveyLabels.optional)})`}</legend><ChoiceGrid options={profileOptions('crops', surveyOptions.crops)} selected={answers.crops} onToggle={(value) => toggleChoice('crops', value)} isUrdu={isUrdu} /></fieldset>
+                    {answers.crops.includes('Other') && <TextField label={profileLabel('cropsOther', surveyLabels.cropsOther)} value={answers.cropsOther} onChange={(value) => update('cropsOther', value)} isUrdu={isUrdu} />}
+                    <fieldset className="choice-fieldset"><legend><BilingualText value={profileLabel('keepsLivestock', surveyLabels.keepsLivestock)} isUrdu={isUrdu} />{profileRequired('keepsLivestock', true) ? ' *' : ` (${translate(surveyLabels.optional)})`}</legend><RadioGrid name="keeps-livestock" options={surveyOptions.yesNo} selected={answers.keepsLivestock} onSelect={(value) => update('keepsLivestock', value)} isUrdu={isUrdu} columns="three-cols" /></fieldset>
+                    {answers.keepsLivestock === 'Yes' && <><fieldset className="choice-fieldset"><legend><BilingualText value={profileLabel('livestock', surveyLabels.livestock)} isUrdu={isUrdu} /> *</legend><ChoiceGrid options={profileOptions('livestock', surveyOptions.livestock)} selected={answers.livestock} onToggle={(value) => toggleChoice('livestock', value)} isUrdu={isUrdu} /></fieldset>{answers.livestock.includes('Other') && <TextField label={profileLabel('livestockOther', surveyLabels.livestockOther)} value={answers.livestockOther} onChange={(value) => update('livestockOther', value)} isUrdu={isUrdu} />}</>}
                   </>}
 
-                  {currentStepQuestions.map((question) => renderManagedQuestion(question, managedQuestions.findIndex((item) => item.id === question.id) + 1))}
+                  {currentStepQuestions.filter((question) => !question.fieldKey).map((question) => renderManagedQuestion(question, managedQuestions.findIndex((item) => item.id === question.id) + 1))}
 
                   {step === totalSteps - 1 && <><label className="consent-card"><input type="checkbox" checked={answers.consent} onChange={(event) => update('consent', event.target.checked)} /><span><strong>{translate(surveyLabels.consentTitle)} *</strong><small>{translate(surveyLabels.consent)}</small></span><Check size={17} className="choice-check" /></label><p className="privacy-note"><ShieldCheck size={17} />{translate(surveyLabels.privacy)}</p></>}
                 </div>

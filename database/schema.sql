@@ -1,8 +1,8 @@
 CREATE TABLE IF NOT EXISTS survey_responses (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   full_name text NOT NULL CHECK (char_length(full_name) BETWEEN 1 AND 160),
-  age text NOT NULL CHECK (char_length(age) BETWEEN 1 AND 40),
-  province text NOT NULL CHECK (char_length(province) BETWEEN 1 AND 80),
+  age text NOT NULL CHECK (char_length(age) BETWEEN 0 AND 40),
+  province text NOT NULL CHECK (char_length(province) BETWEEN 0 AND 80),
   district text NOT NULL CHECK (char_length(district) BETWEEN 1 AND 160),
   consent boolean NOT NULL CHECK (consent IS TRUE),
   answers jsonb NOT NULL CHECK (jsonb_typeof(answers) = 'object'),
@@ -17,6 +17,7 @@ CREATE INDEX IF NOT EXISTS survey_responses_province_idx
 
 CREATE TABLE IF NOT EXISTS survey_questions (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  field_key text,
   prompt_en text NOT NULL CHECK (char_length(prompt_en) BETWEEN 1 AND 500),
   prompt_ur text NOT NULL CHECK (char_length(prompt_ur) BETWEEN 1 AND 500),
   question_type text NOT NULL CHECK (question_type IN (

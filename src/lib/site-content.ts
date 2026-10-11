@@ -114,7 +114,7 @@ export const pageGroups: SiteContentGroup[] = [
 export const navigationSections: NavigationSection[] = [
   { label: 'HOME', items: [{ label: 'Home', href: '/' }] },
   { label: 'ABOUT US', items: [{ label: 'Introduction', href: '/introduction' }, { label: 'Founder Message', href: '/founder' }, { label: 'The Agropreneurs', href: '/about' }] },
-  { label: 'VISION 2040', items: [{ label: 'Vision & Goals', href: '/vision' }, { label: 'Survey Form', href: '/survey-form' }] },
+  { label: 'VISION 2040', items: [{ label: 'Vision & Goals', href: '/vision' }] },
   ...pageGroups.map((group) => ({
     label: group.label,
     items: group.pages.map((contentPage) => ({
