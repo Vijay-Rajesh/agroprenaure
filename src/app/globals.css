@@ -185,6 +185,10 @@ textarea:focus-visible {
   gap: 8px;
 }
 
+.mobile-navigation-socials {
+  display: none;
+}
+
 .header-social-link {
   display: grid;
   place-items: center;
@@ -3194,6 +3198,18 @@ textarea.admin-question-input {
 }
 
 @media (max-width: 720px) {
+  .header-socials {
+    display: none;
+  }
+
+  .mobile-navigation-socials {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+    border-top: 1px solid #e1e5dc;
+    padding: 12px 10px 4px;
+  }
+
   .brand-copy {
     display: none;
   }
@@ -3444,8 +3460,11 @@ textarea.admin-question-input {
 
 @media (max-width: 430px) {
   .header-inner { padding-right: 12px; padding-left: 12px; }
-  .brand { gap: 6px; }
-  .brand-mark { width: 60px; height: 60px; }
+  .site-header .header-inner { gap: 6px; }
+  .brand { gap: 4px; }
+  .brand-mark { width: 54px; height: 54px; }
+  .header-actions { gap: 5px; }
+  .language-switcher button { min-width: 29px; padding-right: 4px; padding-left: 4px; }
   .brand-copy strong { font-size: 11px; }
   .brand-copy small { display: none; }
   .button-small { min-height: 35px; padding: 0 8px; font-size: 10px; }

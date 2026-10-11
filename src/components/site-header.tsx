@@ -167,6 +167,13 @@ export default function SiteHeader({ ctaHref }: SiteHeaderProps) {
               </div>
             );
           })}
+          <div className="mobile-navigation-socials" aria-label="Social media links">
+            {headerSocialLinks.map(({ href, label, className, Icon }) => (
+              <a key={label} className={`header-social-link ${className}`} href={href} target="_blank" rel="noreferrer" aria-label={label} title={label}>
+                <Icon size={16} aria-hidden="true" />
+              </a>
+            ))}
+          </div>
         </nav>
         <nav className="header-actions" aria-label={text('Contact and actions')}>
           <div className="language-switcher" role="group" aria-label={text('Choose language')}>
