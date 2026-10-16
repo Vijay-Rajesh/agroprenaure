@@ -7,7 +7,6 @@ import { useSiteLanguage } from '@/components/language-provider';
 import {
   ArrowRight,
   ChartNoAxesCombined,
-  Clock3,
   Cpu,
   ShieldCheck,
   Sprout,
@@ -58,14 +57,16 @@ export default function HomePage() {
     <>
       <SiteHeader ctaHref="/survey-form" />
       <main className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50">
+        
         <section className="hero-section home-hero-section relative isolate overflow-hidden">
           <div
-            className="hero-photo"
+            className="hero-photo w-full h-full bg-cover bg-center"
             role="img"
             aria-label="Agricultural fields in Pakistan"
             style={{ backgroundImage: "url('/herosection.png')" }}
           />
         </section>
+
 
         <section className="px-4 py-6 sm:px-6 lg:px-8 bg-white">
           <div className="mx-auto max-w-5xl rounded-[28px] border border-emerald-100 bg-emerald-50/60 px-6 py-6 text-center shadow-[0_10px_30px_rgba(22,101,52,0.06)] sm:px-10">
@@ -74,85 +75,63 @@ export default function HomePage() {
               supporting the agricultural community, and creating access to resources for generations to come.
             </p>
             <p className="mt-3 text-sm font-semibold uppercase tracking-[0.18em] text-emerald-700 sm:text-base">
-              — Muhammad Haider
+              Muhammad Haider
             </p>
           </div>
         </section>
 
         <section className="px-4 py-16 sm:px-6 lg:px-8 bg-gradient-to-b from-white via-emerald-50/60 to-white">
-          <div className="mx-auto max-w-6xl">
-            <div className="mb-10 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-              <div>
-                <p className="mb-3 text-sm font-bold uppercase tracking-[0.2em] text-emerald-700">
-                  {isUrdu ? 'یہ سروے کے بارے میں' : 'About This Survey'}
-                </p>
-                <h2 className="text-3xl font-bold leading-tight text-green-900 sm:text-4xl">
-                  {isUrdu ? 'سروے کا تعارف' : 'About This Survey'}
-                </h2>
-              </div>
-              <div className="inline-flex items-center gap-2 self-start rounded-full border border-emerald-200 bg-white px-4 py-2 text-sm font-medium text-emerald-800 shadow-sm">
-                <Clock3 size={16} className="text-emerald-600" />
-                {isUrdu ? 'تخمینہ: 15 منٹ' : 'Estimated time: 15 minutes'}
-              </div>
-            </div>
+          <div className="mx-auto max-w-6xl space-y-12">
+            <header className="text-center">
+              <h1 className="text-3xl font-bold leading-tight text-green-900 sm:text-5xl">
+                VISION 2040 – Securing the Future of Agriculture in Pakistan
+              </h1>
+              <p className="mt-4 text-xl font-semibold text-green-800">Agriculture Community Survey</p>
+              <p className="mx-auto mt-3 max-w-3xl text-base leading-7 text-slate-700 sm:text-lg">
+                Topic: Perspectives on the Food Crisis, Agricultural Development &amp; Outlook to 2040
+              </p>
+              <p className="mt-3 text-sm font-bold uppercase tracking-[0.2em] text-emerald-700">
+                An Initiative by The Agropreneurs
+              </p>
+            </header>
 
-            <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
-              <div className="space-y-6 rounded-[30px] border border-emerald-100 bg-white p-6 shadow-[0_12px_35px_rgba(20,83,45,0.08)] sm:p-8">
-                <p className="text-lg leading-8 text-slate-700">
-                  {isUrdu
-                    ? 'یہ سروے VISION 2040: Securing the Future of Agriculture in Pakistan کا حصہ ہے۔'
-                    : 'This survey is part of VISION 2040: Securing the Future of Agriculture in Pakistan.'}
+            <section className="rounded-[30px] border border-emerald-100 bg-white p-6 shadow-[0_12px_35px_rgba(20,83,45,0.08)] sm:p-8">
+              <h2 className="mb-5 text-2xl font-bold text-green-900 sm:text-3xl">About This Survey</h2>
+              <div className="space-y-4 text-base leading-8 text-slate-700 sm:text-lg">
+                <p>This survey is part of VISION 2040: Securing the Future of Agriculture in Pakistan.</p>
+                <p>
+                  Its purpose is to understand farmers’ experiences, perspectives, expectations and ideas regarding
+                  the future of agriculture and food security in Pakistan through 2040 and beyond.
                 </p>
-                <p className="text-lg leading-8 text-slate-700">
-                  {isUrdu
-                    ? 'اس کا مقصد کسانوں کے تجربات، نقطہ نظر، توقعات اور خیالات کو سمجھنا ہے تاکہ پاکستان میں زراعت اور غذائی تحفظ کا مستقبل 2040 اور اس کے بعد کیسے بنتا ہے، اس کے بارے میں بہتر معلومات حاصل کی جا سکیں۔'
-                    : 'Its purpose is to understand farmers\' experiences, perspectives, expectations and ideas regarding the future of agriculture and food security in Pakistan through 2040 and beyond.'}
-                </p>
-                <p className="text-lg leading-8 text-slate-700">
-                  {isUrdu
-                    ? 'ہم پاکستان کے تمام صوبوں اور علاقوں سے کسانوں کو شامل کرنے کا مقصد رکھتے ہیں تاکہ وہ اپنی عملی زندگی کے تجربات اور محسوس کیے گئے مسائل ہمارے ساتھ بانٹیں۔'
-                    : 'We aim to engage farmers from all provinces and regions of Pakistan and learn directly from their experiences.'}
-                </p>
-                <p className="text-lg leading-8 text-slate-700">
-                  {isUrdu
-                    ? 'جمع کیے گئے انبیشتات سے تحقیقی منصوبہ بندی، منصوبہ سازی اور جدید زرعی ٹیکنالوجیز، جدید طریقوں اور سمارٹ فارمنگ حل فراہم کرنے کے مواقع تلاش کیے جائیں گے۔'
-                    : 'The insights gathered will support research, planning and the exploration of opportunities to introduce modern agricultural technologies, innovative practices and smart farming solutions that can improve:'}
+                <p>We aim to engage farmers from all provinces and regions of Pakistan and learn directly from their experiences.</p>
+                <p>
+                  The insights gathered will support research, planning and the exploration of opportunities to
+                  introduce modern agricultural technologies, innovative practices and smart farming solutions that
+                  can improve:
                 </p>
               </div>
+              <ul className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                {surveyOutcomes.map(({ label, icon: Icon }) => (
+                  <li
+                    key={label}
+                    className="flex items-center gap-3 rounded-2xl border border-emerald-100 bg-emerald-50/50 px-4 py-3 text-sm font-medium text-slate-700"
+                  >
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-emerald-100 text-emerald-700">
+                      <Icon size={17} />
+                    </span>
+                    <span>{label}</span>
+                  </li>
+                ))}
+              </ul>
+            </section>
 
-              <div className="rounded-[30px] border border-emerald-200 bg-gradient-to-br from-emerald-50 via-white to-lime-50 p-6 shadow-[0_12px_35px_rgba(20,83,45,0.05)] sm:p-8">
-                <div className="mb-5 flex items-center gap-3">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-700">
-                    <Sprout size={20} />
-                  </div>
-                  <h3 className="text-xl font-bold text-green-900">
-                    {isUrdu ? 'نتائج' : 'Key Benefits'}
-                  </h3>
-                </div>
-                <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
-                  {surveyOutcomes.map(({ label, icon: Icon }) => (
-                    <div
-                      key={label}
-                      className="flex items-center gap-3 rounded-2xl border border-emerald-100 bg-white/80 px-4 py-3 text-sm font-medium text-slate-700 shadow-sm"
-                    >
-                      <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-100 text-emerald-700">
-                        <Icon size={17} />
-                      </span>
-                      <span>{label}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-12 rounded-[30px] border border-emerald-100 bg-white p-6 shadow-[0_12px_35px_rgba(15,118,110,0.06)] sm:p-8">
-              <h3 className="mb-6 text-2xl font-bold text-green-900">
-                {isUrdu ? 'یہ اقدام کیا سہارا دے سکتا ہے؟' : 'What Can This Initiative Support?'}
-              </h3>
-
-              <div className="grid gap-3 md:grid-cols-2">
+            <section className="rounded-[30px] border border-emerald-100 bg-white p-6 shadow-[0_12px_35px_rgba(15,118,110,0.06)] sm:p-8">
+              <h2 className="mb-6 text-2xl font-bold text-green-900 sm:text-3xl">
+                What Can This Initiative Support?
+              </h2>
+              <ul className="grid gap-3 md:grid-cols-2">
                 {initiativeSupport.map((item, index) => (
-                  <div
+                  <li
                     key={item}
                     className="flex items-start gap-3 rounded-2xl border border-emerald-100 bg-emerald-50/60 px-4 py-3"
                   >
@@ -160,63 +139,47 @@ export default function HomePage() {
                       {index + 1}
                     </span>
                     <span className="text-base leading-7 text-slate-700">{item}</span>
-                  </div>
+                  </li>
                 ))}
-              </div>
-            </div>
+              </ul>
+            </section>
 
-            <div className="mt-12 rounded-[30px] border border-emerald-200 bg-gradient-to-br from-emerald-50 via-white to-lime-50 p-6 shadow-[0_12px_35px_rgba(20,83,45,0.08)] sm:p-8">
+            <section className="rounded-[30px] border border-emerald-200 bg-gradient-to-br from-emerald-50 via-white to-lime-50 p-6 shadow-[0_12px_35px_rgba(20,83,45,0.08)] sm:p-8">
               <div className="mb-5 flex items-center gap-3">
                 <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-700">
                   <ShieldCheck size={20} />
                 </div>
-                <h3 className="text-2xl font-bold text-green-900">
-                  {isUrdu ? 'آپ کی شرکت اہم ہے' : 'Your Participation Matters'}
-                </h3>
+                <h2 className="text-2xl font-bold text-green-900 sm:text-3xl">Your Participation Matters</h2>
               </div>
-
-              <div className="grid gap-4 md:grid-cols-3">
-                <div className="rounded-2xl border border-emerald-100 bg-white p-4">
-                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700">
-                    {isUrdu ? 'سیکیورٹی' : 'Privacy'}
-                  </p>
-                  <p className="mt-2 text-base leading-7 text-slate-700">
-                    {isUrdu
-                      ? 'آپ کے جوابات خفیہ رکھے جائیں گے۔'
-                      : 'Your responses will be kept confidential.'}
-                  </p>
-                </div>
-                <div className="rounded-2xl border border-emerald-100 bg-white p-4">
-                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700">
-                    {isUrdu ? 'وقت' : 'Time'}
-                  </p>
-                  <p className="mt-2 text-base leading-7 text-slate-700">
-                    <strong>{isUrdu ? 'تخمینے کا وقت:' : 'Estimated completion time:'}</strong> 15 minutes.
-                  </p>
-                </div>
-                <div className="rounded-2xl border border-emerald-100 bg-white p-4 md:col-span-1">
-                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700">
-                    {isUrdu ? 'شراکت' : 'Impact'}
-                  </p>
-                  <p className="mt-2 text-base leading-7 text-slate-700">
-                    {isUrdu
-                      ? 'آپ کا قیمتی تجربہ مستقبل کی حکمت عملی میں معاون ثابت ہوگا۔'
-                      : 'Your experience can help shape a stronger agricultural future for Pakistan.'}
-                  </p>
-                </div>
+              <div className="space-y-4 text-base leading-8 text-slate-700 sm:text-lg">
+                <p>
+                  Participation is voluntary. Your responses will be treated confidentially and analyzed primarily in
+                  aggregate form for research, learning and planning purposes.
+                </p>
+                <p>Estimated completion time: 15 minutes.</p>
+                <p>Thank you for sharing your valuable experience and perspective.</p>
+                <p>Your knowledge can help shape the future of agriculture in Pakistan.</p>
               </div>
-            </div>
+            </section>
           </div>
         </section>
 
         <section className="px-4 py-6 sm:px-6 lg:px-8 bg-white">
           <div className="mx-auto max-w-5xl rounded-[28px] border border-emerald-100 bg-gradient-to-r from-emerald-50 via-white to-lime-50 px-6 py-6 text-center shadow-[0_10px_30px_rgba(22,101,52,0.05)] sm:px-10">
-            <p className="text-base leading-8 text-slate-700 sm:text-lg" dir="rtl">
+            <p
+              className="homepage-founder-quote leading-8 text-slate-700"
+              dir="rtl"
+              lang="ur"
+            >
               ہم حقیقی معنوں میں کل کو محفوظ بنانے پر یقین رکھتے ہیں، جہاں ہر فرد قدرتی وسائل کے تحفظ، زرعی برادری کی معاونت، اور
               آنے والی نسلوں کے لیے وسائل تک رسائی پیدا کرنے میں اپنا کردار ادا کرے۔
             </p>
-            <p className="mt-3 text-sm font-semibold uppercase tracking-[0.18em] text-emerald-700 sm:text-base" dir="rtl">
-              — محمد حیدر
+            <p
+              className="homepage-founder-name mt-3 font-semibold text-emerald-700"
+              dir="rtl"
+              lang="ur"
+            >
+              محمد حیدر
             </p>
           </div>
         </section>

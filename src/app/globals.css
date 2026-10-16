@@ -646,7 +646,25 @@ textarea:focus-visible {
 }
 
 .home-hero-section {
-  min-height: clamp(560px, 76svh, 740px);
+  min-height: clamp(380px, 54svh, 520px);
+}
+
+.home-hero-section .hero-photo {
+  background-position: center center;
+  background-size: cover;
+}
+
+.homepage-founder-quote {
+  font-family: var(--font-urdu-sans), var(--font-urdu), sans-serif;
+  font-size: clamp(1.15rem, 2vw, 1.4rem);
+  font-weight: 500;
+  line-height: 2.2;
+}
+
+.homepage-founder-name {
+  font-family: var(--font-urdu-sans), var(--font-urdu), sans-serif;
+  font-size: clamp(1rem, 1.5vw, 1.15rem);
+  line-height: 2;
 }
 
 .home-hero-section .hero-copy {
@@ -3327,8 +3345,9 @@ textarea.admin-question-input {
   .language-button { font-size: 12px; }
   .hero-section { min-height: 0; aspect-ratio: 16 / 9; }
   .hero-photo { background-position: center; background-size: 100% 100%; }
+  .home-hero-section .hero-photo { background-position: center center; background-size: cover; }
   .hero-content { padding: 0 22px 30px; }
-  .home-hero-section { min-height: 500px; aspect-ratio: auto; }
+  .home-hero-section { min-height: 320px; aspect-ratio: auto; }
   .home-hero-section .hero-content { padding: 24px 22px 38px; }
   .home-hero-section .hero-copy h1 { font-size: clamp(38px, 9vw, 52px); }
   .why-section h2, .section-heading h2, .about-intro h2, .survey-intro h2 { font-size: 30px; }

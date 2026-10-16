@@ -187,7 +187,7 @@ export default function SiteHeader({ ctaHref }: SiteHeaderProps) {
               </a>
             ))}
           </div>
-          <Link className="button button-small" href={ctaHref ?? '/survey-form'} onClick={closeNavigation}>{text('Take the Survey')}</Link>
+          {/* <Link className="button button-small" href={ctaHref ?? '/survey-form'} onClick={closeNavigation}>{text('Take the Survey')}</Link>
           <button
             className="mobile-navigation-toggle"
             type="button"
@@ -197,7 +197,7 @@ export default function SiteHeader({ ctaHref }: SiteHeaderProps) {
             onClick={() => { setIsMobileNavigationOpen((current) => !current); setOpenNavigation(null); }}
           >
             {isMobileNavigationOpen ? <X size={20} /> : <Menu size={20} />}
-          </button>
+          </button> */}
         </nav>
       </div>
     </header>

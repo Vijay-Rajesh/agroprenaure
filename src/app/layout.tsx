@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Manrope, Noto_Nastaliq_Urdu } from "next/font/google";
+import { Manrope, Noto_Nastaliq_Urdu, Noto_Sans_Arabic } from "next/font/google";
 import { LanguageProvider } from "@/components/language-provider";
 import { SiteDataProvider } from "@/components/site-data-provider";
 import { getPublicSiteSnapshot } from "@/lib/site-cms";
@@ -20,6 +20,13 @@ const notoNastaliqUrdu = Noto_Nastaliq_Urdu({
   display: "swap",
 });
 
+const notoSansArabic = Noto_Sans_Arabic({
+  variable: "--font-urdu-sans",
+  subsets: ["arabic"],
+  weight: ["400", "500", "600"],
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: "The Agropreneurs",
   description: "Share your experience to help shape a stronger, fairer, and more sustainable agricultural future for Pakistan.",
@@ -34,7 +41,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
   }
 
   return (
-    <html lang="en" className={`${manrope.variable} ${notoNastaliqUrdu.variable} h-full antialiased`}>
+    <html lang="en" className={`${manrope.variable} ${notoNastaliqUrdu.variable} ${notoSansArabic.variable} h-full antialiased`}>
       <body className="min-h-full"><SiteDataProvider initialSite={initialSite}><LanguageProvider>{children}</LanguageProvider></SiteDataProvider></body>
     </html>
   );
