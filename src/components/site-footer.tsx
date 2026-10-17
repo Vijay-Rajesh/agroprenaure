@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { ArrowUpRight, MessageCircle, Phone } from 'lucide-react';
 import { useSiteLanguage } from '@/components/language-provider';
 import { translateSiteText } from '@/lib/site-translations';
+import { Mail } from 'lucide-react';
 
 function FacebookIcon(props: React.ComponentProps<'svg'>) {
   return (
@@ -48,12 +49,16 @@ export default function SiteFooter() {
         <div className="footer-brand">
           <Link className="brand brand-light" href="/">
             <span className="brand-mark"><img src="/logo1.png" alt="The Agropreneurs logo" width={80} height={80} /></span>
-            <span className="brand-copy"><strong>The Agropreneurs</strong><small>{text('SMART | SUSTAINABLE | AGRICULTURE')}</small></span>
+            <span className="brand-copy"><strong>The Agropreneurs</strong><small>{text('SUSTAINABLE | SMART | AGRICULTURE')}</small></span>
           </Link>
           <p>{text('Building a smart, sustainable and food-secure future for Pakistan through community, knowledge and action.')}</p>
         </div>
         <div className="footer-contact">
           <a href="tel:+923002008999"><Phone size={16} />+92 300 2008999</a>
+          <a href="mailto:Info@theagropreneurs.com">
+  <Mail size={16} />
+  Info@theagropreneurs.com
+</a>
           <a href="https://www.theagropreneurs.com" target="_blank" rel="noreferrer"><ArrowUpRight size={16} />www.theagropreneurs.com</a>
           <div className="footer-socials" aria-label="Social media links">
             {socialLinks.map(({ href, label, className, Icon }) => (

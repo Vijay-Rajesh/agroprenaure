@@ -1,87 +1,31 @@
 'use client';
 
 import Image from 'next/image';
-import Link from 'next/link';
-import {
-  ArrowRight,
-  BriefcaseBusiness,
-  Globe2,
-  Leaf,
-  Lightbulb,
-  Sprout,
-  Target,
-  Users,
-} from 'lucide-react';
+import { Mail } from 'lucide-react';
 import SiteHeader from '@/components/site-header';
 import SiteFooter from '@/components/site-footer';
 import { useSiteLanguage } from '@/components/language-provider';
 
-const pillars = [
+const missionPoints = [
   {
-    titleEn: 'Objective',
-    titleUr: 'مقصد',
-    descriptionEn:
-      'Bring together farmers, agricultural experts, innovators and organizations to turn shared knowledge into practical opportunities.',
-    descriptionUr:
-      'کسانوں، زرعی ماہرین، موجدین اور تنظیموں کو ایک ساتھ لانا تاکہ مشترکہ علم کو عملی مواقع میں بدلنا۔',
-    icon: Target,
+    en: 'Make agriculture easier and more productive by providing simple, practical and affordable solutions for everyday needs.',
+    ur: 'روزمرہ ضروریات کے لیے آسان، عملی اور سستے حل فراہم کرکے زراعت کو آسان اور زیادہ پیداواری بنانا۔',
   },
   {
-    titleEn: 'Vision',
-    titleUr: 'ویژن',
-    descriptionEn:
-      'To build a smarter, more innovative and sustainable future for agriculture, where collaboration drives growth, food security and global standards.',
-    descriptionUr:
-      'ایک ذہین، زیادہ جدید اور پائیدار زرعی مستقبل بنانا، جہاں تعاون، غذائی تحفظ، ترقی اور عالمی معیار کو فروغ ملتا ہے۔',
-    icon: Lightbulb,
+    en: 'Help new people enter the sector with confidence by providing useful knowledge, guidance, training and business opportunities.',
+    ur: 'مفید علم، رہنمائی، تربیت اور کاروباری مواقع فراہم کرکے نئے لوگوں کو اعتماد کے ساتھ اس شعبے میں آنے میں مدد دینا۔',
   },
   {
-    titleEn: 'Mission',
-    titleUr: 'مشن',
-    descriptionEn:
-      'Simplify the journey into agriculture by connecting people with the knowledge, tools, opportunities and support they need to succeed.',
-    descriptionUr:
-      'زراعت میں داخلے کے سفر کو آسان بنانا، لوگوں کو مطلوبہ علم، ٹولز، مواقع اور معاونت فراہم کرنا تاکہ وہ کامیاب ہو سکیں۔',
-    icon: Sprout,
-  },
-];
-
-const focusAreas = [
-  {
-    titleEn: 'Farmers and communities',
-    titleUr: 'کسان اور برادری',
-    descriptionEn:
-      'We start by understanding the real needs, challenges and concerns of the agricultural community.',
-    descriptionUr:
-      'ہم زرعی برادری کی حقیقی ضروریات، چیلنجز اور خدشات کو سمجھنے سے کام شروع کرتے ہیں۔',
-    icon: Users,
+    en: 'Connect people with the right technology, products and services to improve efficiency, productivity and the way agriculture is done.',
+    ur: 'کارکردگی، پیداواریت اور زرعی طریقوں کو بہتر بنانے کے لیے لوگوں کو موزوں ٹیکنالوجی، مصنوعات اور خدمات سے جوڑنا۔',
   },
   {
-    titleEn: 'Knowledge and opportunity',
-    titleUr: 'علم اور موقع',
-    descriptionEn:
-      'We connect people with practical knowledge, technology, products, services and opportunities that build lasting value.',
-    descriptionUr:
-      'ہم لوگوں کو عملی علم، ٹیکنالوجی، مصنوعات، خدمات اور ایسے مواقع سے جوڑتے ہیں جو دیرپا قیمت پیدا کریں۔',
-    icon: Globe2,
+    en: 'Encourage new ideas and agribusinesses by supporting innovation, entrepreneurship and opportunities across the agricultural value chain.',
+    ur: 'جدت، کاروباری صلاحیت اور زرعی ویلیو چین میں مواقع کی حمایت کرکے نئے خیالات اور زرعی کاروباروں کی حوصلہ افزائی کرنا۔',
   },
   {
-    titleEn: 'Smart and sustainable growth',
-    titleUr: 'ذہین اور پائیدار ترقی',
-    descriptionEn:
-      'We support innovation, entrepreneurship and responsible practices to create stronger local, national and international market access.',
-    descriptionUr:
-      'ہم نئی فکر، کاروباری صلاحیت اور ذمہ دارانہ طریقوں کو سہارا دیتے ہیں تاکہ مقامی، قومی اور بین الاقوامی بازاروں تک رسائی مضبوط ہو۔',
-    icon: Leaf,
-  },
-  {
-    titleEn: 'Agriculture as opportunity',
-    titleUr: 'زراعت ایک موقع',
-    descriptionEn:
-      'We want to inspire the next generation to see agriculture as a sector of opportunity, growth and long-term sustainability.',
-    descriptionUr:
-      'ہم اگلی نسل کو یہ دکھانا چاہتے ہیں کہ زراعت ترقی، مواقع اور دیرپا پائیداری کا ایک اہم شعبہ ہے۔',
-    icon: BriefcaseBusiness,
+    en: 'Build a stronger and sustainable future by promoting responsible practices, collaboration and access to local, national and international markets.',
+    ur: 'ذمہ دارانہ طریقوں، تعاون اور مقامی، قومی و بین الاقوامی منڈیوں تک رسائی کو فروغ دے کر ایک مضبوط اور پائیدار مستقبل بنانا۔',
   },
 ];
 
@@ -93,102 +37,133 @@ export default function AboutPage() {
     <>
       <SiteHeader ctaHref="/survey-form" />
       <main className="min-h-screen bg-[#f5f7f1] text-slate-800" dir={dir}>
-        <section className="relative overflow-hidden bg-gradient-to-br from-[#173b2a] via-[#204a34] to-[#2f6548] px-5 pb-24 pt-16 text-white sm:pb-28 sm:pt-20">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.12),_transparent_40%)]" />
-          <div className="relative mx-auto max-w-6xl text-center">
-            <p className="mb-4 text-[0.7rem] font-bold uppercase tracking-[0.28em] text-emerald-200 sm:text-xs">
-              {isUrdu ? 'تعارف' : 'INTRODUCTION'}
-            </p>
-            <h1 className="mx-auto max-w-5xl text-[2.75rem] font-bold leading-[1.08] tracking-[-0.05em] sm:text-6xl lg:text-7xl">
-              {isUrdu ? 'The Agropreneurs کے بارے میں' : 'About The Agropreneurs'}
-            </h1>
-            <p className="mx-auto mt-6 max-w-3xl text-base leading-7 text-emerald-50/90 sm:mt-7 sm:text-xl sm:leading-8">
-              {isUrdu
-                ? 'کسانوں، تعلیمی اداروں، کاروباری برادری اور تنظیموں کو جوڑ کر پاکستان میں زرعی ترقی اور پائیداری پیدا کرنا۔'
-                : 'Connecting people to smart agriculture and sustainable resources to build a stronger agricultural future in Pakistan.'}
-            </p>
-          </div>
-        </section>
-
-        <section className="relative mx-auto -mt-12 max-w-5xl px-5 pb-2 sm:px-6 lg:px-8">
-          <div className="grid gap-3 md:grid-cols-3 md:gap-4">
-            {[
-              { value: 'Farmers', labelEn: 'Farmers & communities', labelUr: 'کسان اور برادری', icon: Users },
-              { value: 'Growth', labelEn: 'Smart growth', labelUr: 'ذہین ترقی', icon: Lightbulb },
-              { value: 'Future', labelEn: 'Sustainable future', labelUr: 'پائیدار مستقبل', icon: Leaf },
-            ].map(({ value, labelEn, labelUr, icon: Icon }) => (
-              <article
-                key={value}
-                className="flex min-h-[125px] flex-col rounded-[20px] border border-[#e2e8df] bg-white p-4 shadow-[0_10px_24px_rgba(20,83,45,0.06)] transition duration-200 hover:-translate-y-1 hover:shadow-[0_16px_30px_rgba(20,83,45,0.1)] sm:min-h-[135px] sm:p-5"
-              >
-                <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-xl bg-[#e3f2e7] text-[#1f5d45]">
-                  <Icon size={19} strokeWidth={2} />
+        <section className="px-5 py-10 sm:px-6 sm:py-12 lg:px-8">
+          <div className="mx-auto grid max-w-6xl gap-6 rounded-[28px] border border-emerald-200 bg-gradient-to-br from-white to-emerald-50 p-4 shadow-[0_12px_35px_rgba(20,83,45,0.05)] sm:gap-8 sm:p-6 lg:grid-cols-[0.95fr_1.05fr] lg:items-start lg:gap-10 lg:p-8">
+            <div>
+              <div className="relative overflow-hidden rounded-[26px] border border-emerald-200 bg-white p-2.5 shadow-[0_12px_30px_rgba(20,83,45,0.07)] sm:p-3">
+                <div className="relative aspect-[4/5] overflow-hidden rounded-[22px]">
+                  <Image
+                    src="/founder.jpg"
+                    alt={isUrdu ? 'محمد حیدر، بانی، دی ایگروپرینیورز' : 'Muhammad Haider, Founder of The Agropreneurs'}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 768px) 100vw, 38vw"
+                  />
                 </div>
-                <h2 className="max-w-[15ch] text-lg font-bold leading-tight tracking-[-0.04em] text-[#1d2d28] sm:text-xl">
-                  {isUrdu ? labelUr : labelEn}
-                </h2>
-              </article>
-            ))}
+              </div>
+              <div className="px-2 pt-5 text-center sm:pt-6">
+                <p className="text-lg font-semibold text-green-900">Muhammad Haider</p>
+                <p className="text-sm uppercase tracking-[0.15em] text-emerald-700">
+                  {isUrdu ? 'بانی، The Agropreneurs' : 'Founder, The Agropreneurs'}
+                </p>
+                <a
+                  href="mailto:Founder@theagropreneurs.com"
+                  className="mt-2 inline-flex items-center justify-center gap-2 text-sm font-medium text-green-800 underline decoration-emerald-300 underline-offset-4 transition hover:text-green-950"
+                >
+                  <Mail size={16} aria-hidden="true" />
+                  Founder@theagropreneurs.com
+                </a>
+              </div>
+            </div>
+
+            <div>
+              <p className="mb-3 text-sm font-bold uppercase tracking-[0.18em] text-emerald-700">
+                {isUrdu ? 'بانی کا پیغام' : "FOUNDER'S MESSAGE"}
+              </p>
+              <h1 className="mb-4 text-3xl font-bold leading-tight tracking-tight text-green-900 sm:text-4xl">
+                {isUrdu ? 'آئیے زراعت کا مستقبل مل کر بنائیں۔' : 'Let’s build agriculture’s future together.'}
+              </h1>
+              <div className="max-w-2xl space-y-4 text-base leading-7 text-slate-700 sm:space-y-5 sm:leading-7 lg:text-[1.05rem] lg:leading-8">
+                <p>
+                  {isUrdu
+                    ? 'زراعت نے ہمیشہ پاکستان کے دل کے قریب مقام رکھا ہے۔ یہ ہمارے لوگوں کو خوراک فراہم کرتی ہے، ہماری برادریوں کو سہارا دیتی ہے اور ہماری معیشت میں اہم کردار ادا کرتی ہے۔ The Agropreneurs ایک سادہ وژن کے تحت قائم ہوا: کسانوں، تعلیمی اداروں، کاروباری برادری اور تنظیموں کو اکٹھا کرنا تاکہ علم کا اشتراک ہو، لوگوں کو مواقع سے جوڑا جائے اور زرعی صنعت کی ترقی میں مدد ملے۔'
+                    : 'Agriculture has always been close to the heart of Pakistan. It feeds our people, supports our communities, and plays an important role in our economy. The Agropreneurs was founded with a simple vision: to bring farmers, educational institutions, the business community and organizations together to share knowledge, connect people with opportunities and support the growth of the agro industry.'}
+                </p>
+                <p>
+                  {isUrdu
+                    ? 'ہمارا فلسفہ سادہ ہے: زراعت اسی وقت آگے بڑھتی ہے جب اس سے وابستہ لوگوں کو ترقی کے لیے علم، ذرائع اور مواقع ملیں۔ The Agropreneurs میں ہم زرعی برادری کو درپیش چیلنجز سنتے ہیں اور لوگوں کو عملی حل، خیالات اور مواقع سے جوڑنے کے لیے کام کرتے ہیں۔ VISION 2040 – Securing the Future of Agriculture in Pakistan جیسے اقدامات کے ذریعے ہم نئی نسل کو زراعت میں مواقع اور ترقی دیکھنے کی ترغیب دینا چاہتے ہیں، اور زراعت کے لیے ایک مضبوط، ذہین اور زیادہ پائیدار مستقبل کی تشکیل میں حصہ لینا چاہتے ہیں۔'
+                    : 'Our philosophy is simple: agriculture moves forward when its people have the knowledge, tools, and opportunities to grow. At The Agropreneurs, we listen to the challenges faced by the agricultural community and work to connect people with practical solutions, ideas, and opportunities. Through initiatives such as VISION 2040 – Securing the Future of Agriculture in Pakistan, we want to inspire the next generation to see agriculture as a sector of opportunity and growth, and contribute to a stronger, smarter, and more sustainable future for agriculture.'}
+                </p>
+                <p>
+                  {isUrdu
+                    ? 'The Agropreneurs پائیدار اور ذہین حلوں کے ذریعے زراعت کو تبدیل کرنے کے ہمارے عزم کا اظہار ہے۔'
+                    : 'The Agropreneurs is our commitment to transforming agriculture through sustainable and smart solutions.'}
+                </p>
+              </div>
+            </div>
           </div>
         </section>
 
         <section className="px-5 py-12 sm:px-6 sm:py-16 lg:px-8">
-          <div className="mx-auto max-w-6xl rounded-[28px] border border-emerald-100 bg-white p-5 shadow-[0_12px_35px_rgba(20,83,45,0.05)] sm:p-8 lg:p-10">
-            <div className="mb-6 flex items-center gap-3 sm:mb-7">
-              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-700">
-                <Sprout size={20} />
-              </span>
-              <p className="text-sm font-bold uppercase tracking-[0.18em] text-emerald-700">
-                {isUrdu ? 'ہم کیا ہیں' : 'Who We Are'}
+          <div className="mx-auto grid max-w-6xl gap-6 rounded-[28px] border border-emerald-100 bg-white p-6 shadow-[0_12px_35px_rgba(20,83,45,0.05)] sm:grid-cols-[0.35fr_1fr] sm:gap-10 sm:p-9 lg:p-12">
+            <div>
+              <p className="mb-3 text-sm font-bold uppercase tracking-[0.2em] text-emerald-700">
+                {isUrdu ? 'ہم کیا کرتے ہیں' : 'OUR PURPOSE'}
               </p>
+              <h2 className="text-3xl font-bold tracking-tight text-green-900 sm:text-4xl">
+                {isUrdu ? 'مقصد' : 'Objective'}
+              </h2>
             </div>
-
-            <div className="max-w-4xl space-y-5 text-base leading-8 text-slate-700 sm:space-y-6 sm:text-lg">
+            <div className="space-y-4 text-base leading-8 text-slate-700 sm:text-lg">
               <p>
                 {isUrdu
-                  ? 'The Agropreneurs پاکستان کی زرعی معاشی زندگی کے ساتھ گہرا تعلق رکھتا ہے۔ زراعت نے ہمیشہ پاکستان کے دل کے قریب مقام رکھا ہے۔ یہ ہمارے لوگوں کو کھانا فراہم کرتی ہے، ہمارے معاشروں کو سہارا دیتی ہے اور ہماری معیشت کو مضبوط بناتی ہے۔'
-                  : 'Agriculture has always been close to the heart of Pakistan. It feeds our people, supports our communities and plays an important role in our economy.'}
+                  ? 'The Agropreneurs زرعی شعبے میں کام کرنے والے کسانوں، زرعی ماہرین، جدت پسندوں اور تنظیموں کو اکٹھا کرتا ہے۔ ہمارا مقصد علم، ٹیکنالوجی اور عملی تجربے کے درمیان رابطہ قائم کرنا اور ایسے حل فراہم کرنا ہے جو کارکردگی بہتر بنائیں اور زرعی برادری کے لیے بہتر مواقع پیدا کریں۔'
+                  : 'The Agropreneurs brings together farmers, agri experts, innovators and organizations working across the agricultural sector. Our aim is to bridge knowledge, technology and practical experience by providing solutions that enhance efficiency and create better opportunities for farming communities.'}
               </p>
               <p>
                 {isUrdu
-                  ? 'The Agropreneurs اس سادہ وژن کے ساتھ قائم ہوا کہ کسانوں، تعلیمی اداروں، کاروباری برادری اور تنظیموں کو اکٹھا کیا جائے تاکہ علم کا اشتراک، مواقع سے رابطہ اور زرعی صنعت کی ترقی ممکن ہو۔'
-                  : 'The Agropreneurs was founded with a simple vision: to bring farmers, educational institutions, the business community and organizations together to share knowledge, connect people with opportunities and support the growth of the agro industry.'}
-              </p>
-              <p>
-                {isUrdu
-                  ? 'ہمارا فلسفہ سادہ ہے: جب زراعت کے لوگ علم، ٹولز اور مواقع حاصل کریں گے، تو زراعت آگے بڑھے گی۔ ہم ان چیلنجز کو سنتے ہیں جو زرعی برادری کے سامنے ہیں اور ان کے لیے عملی حل، خیالات اور مواقع فراہم کرنے کے لیے کام کرتے ہیں۔'
-                  : 'Our philosophy is simple: agriculture moves forward when its people have the knowledge, tools and opportunities to grow. At The Agropreneurs, we listen to the challenges faced by the agricultural community and work to connect people with practical solutions, ideas and opportunities.'}
+                  ? 'ہم ایسا ماحول قائم کرنا چاہتے ہیں جہاں خیالات کا تبادلہ ہو، مہارتیں پروان چڑھیں اور نئی نسل زراعت کو پائیدار ترقی اور معاشی نمو کے لیے ایک اہم شعبہ سمجھے۔'
+                  : 'We seek to foster an environment where ideas are shared, skills are developed, and the next generation is inspired to recognize agriculture as a vital sector for sustainable development and economic growth.'}
               </p>
             </div>
           </div>
         </section>
 
-        <section className="bg-white px-5 py-12 sm:px-6 sm:py-16 lg:px-8">
-          <div className="mx-auto max-w-6xl">
-            <div className="mb-9 border-b border-emerald-100 pb-6 sm:mb-10">
-              <p className="mb-3 text-sm font-bold uppercase tracking-[0.2em] text-emerald-700">
-                {isUrdu ? 'ہماری بنیاد' : 'Our Foundation'}
+        <section className="bg-[#173b2a] px-5 py-12 text-white sm:px-6 sm:py-16 lg:px-8">
+          <div className="mx-auto grid max-w-6xl gap-6 sm:grid-cols-[0.35fr_1fr] sm:gap-10">
+            <div>
+              <p className="mb-3 text-sm font-bold uppercase tracking-[0.2em] text-emerald-200">
+                {isUrdu ? 'ہمارا مستقبل' : 'OUR FUTURE'}
               </p>
-              <h2 className="text-3xl font-bold tracking-tight text-green-900 sm:text-4xl">
-                {isUrdu ? 'بنیادی ستون' : 'Core Pillars'}
+              <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
+                {isUrdu ? 'ویژن' : 'Vision'}
               </h2>
             </div>
+            <p className="max-w-4xl text-lg leading-8 text-emerald-50/90 sm:text-xl">
+              {isUrdu
+                ? 'زراعت کے شعبے کے لیے ایک زیادہ ذہین، جدید اور پائیدار مستقبل بنانا، جہاں جدید طریقے اور باہمی تعاون عالمی معیار کو آگے بڑھائیں، زرعی ترقی کو فروغ دیں، نئے مواقع پیدا کریں اور طویل مدتی غذائی تحفظ میں مدد دیں۔'
+                : 'To build a smarter, more innovative, and sustainable future for the agriculture sector, where modern practices and collaboration drive global standards, promote agricultural growth, create new opportunities, and support long-term food security.'}
+            </p>
+          </div>
+        </section>
 
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {pillars.map(({ titleEn, titleUr, descriptionEn, descriptionUr, icon: Icon }) => (
-                <article key={titleEn} className="h-full rounded-[22px] border border-emerald-100 bg-gradient-to-br from-emerald-50/80 via-white to-white p-5 shadow-[0_12px_28px_rgba(20,83,45,0.05)] transition duration-200 hover:-translate-y-1 hover:shadow-[0_18px_34px_rgba(20,83,45,0.09)] sm:p-6">
-                  <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-green-900 text-white">
-                    <Icon size={18} />
-                  </div>
-                  <h3 className="mb-2 text-lg font-bold tracking-tight text-green-900 sm:text-xl">
-                    {isUrdu ? titleUr : titleEn}
-                  </h3>
-                  <p className="text-sm leading-6 text-slate-700 sm:text-[0.95rem]">
-                    {isUrdu ? descriptionUr : descriptionEn}
-                  </p>
-                </article>
-              ))}
+        <section className="px-5 py-12 sm:px-6 sm:py-16 lg:px-8">
+          <div className="mx-auto max-w-6xl rounded-[28px] border border-emerald-100 bg-white p-6 shadow-[0_12px_35px_rgba(20,83,45,0.05)] sm:p-9 lg:p-12">
+            <div className="mb-8 max-w-3xl">
+              <p className="mb-3 text-sm font-bold uppercase tracking-[0.2em] text-emerald-700">
+                {isUrdu ? 'ہماری وابستگی' : 'WHAT WE DO'}
+              </p>
+              <h2 className="text-3xl font-bold tracking-tight text-green-900 sm:text-4xl">
+                {isUrdu ? 'مشن' : 'Mission'}
+              </h2>
+              <p className="mt-4 text-base leading-8 text-slate-700 sm:text-lg">
+                {isUrdu
+                  ? 'The Agropreneurs لوگوں کو کامیابی کے لیے درکار علم، ذرائع، مواقع اور مدد سے جوڑ کر زراعت میں داخلے کے سفر کو آسان بنانے کے لیے پُرعزم ہے۔ ہمارا مشن یہ ہے کہ:'
+                  : 'The Agropreneurs is committed to simplifying the journey into agriculture by connecting people with the knowledge, tools, opportunities, and support they need to succeed. Our mission is to:'}
+              </p>
             </div>
+            <ol className="grid gap-3 md:grid-cols-2">
+              {missionPoints.map(({ en, ur }, index) => (
+                <li key={en} className="flex gap-4 rounded-2xl border border-emerald-100 bg-[#f7faf5] p-5">
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-green-900 text-sm font-bold text-white">
+                    {String(index + 1).padStart(2, '0')}
+                  </span>
+                  <p className="text-sm leading-7 text-slate-700 sm:text-base">
+                    {isUrdu ? ur : en}
+                  </p>
+                </li>
+              ))}
+            </ol>
           </div>
         </section>
 
@@ -201,95 +176,11 @@ export default function AboutPage() {
               <h2 className="text-3xl font-bold leading-tight tracking-tight text-green-900 sm:text-4xl">
                 {isUrdu ? 'سچائی کو سمجھنا، پھر عملی حل فراہم کرنا' : 'Understand the real needs before creating solutions'}
               </h2>
-            </div>
-
-            <div className="grid gap-4 md:grid-cols-2">
-              {focusAreas.map(({ titleEn, titleUr, descriptionEn, descriptionUr, icon: Icon }, index) => (
-                <article key={titleEn} className="h-full rounded-[22px] border border-emerald-100 bg-white p-5 shadow-[0_8px_24px_rgba(20,83,45,0.04)] transition duration-200 hover:-translate-y-1 hover:shadow-[0_16px_32px_rgba(20,83,45,0.08)] sm:p-6">
-                  <div className="mb-3 flex items-center justify-between">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-100 text-emerald-700">
-                      <Icon size={19} />
-                    </div>
-                    <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold tracking-[0.12em] text-emerald-700">0{index + 1}</span>
-                  </div>
-                  <h3 className="mb-2 text-base font-bold text-green-900 sm:text-lg">
-                    {isUrdu ? titleUr : titleEn}
-                  </h3>
-                  <p className="text-sm leading-6 text-slate-700 sm:text-[0.95rem]">
-                    {isUrdu ? descriptionUr : descriptionEn}
-                  </p>
-                </article>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section className="px-5 py-12 sm:px-6 sm:py-16 lg:px-8">
-          <div className="mx-auto grid max-w-6xl gap-6 rounded-[28px] border border-emerald-200 bg-gradient-to-br from-white to-emerald-50 p-4 shadow-[0_12px_35px_rgba(20,83,45,0.05)] sm:gap-8 sm:p-6 lg:grid-cols-[0.8fr_1.2fr] lg:items-center lg:p-8">
-            <div className="relative overflow-hidden rounded-[26px] border border-emerald-200 bg-white p-2.5 shadow-[0_12px_30px_rgba(20,83,45,0.07)] sm:p-3">
-              <div className="relative aspect-[4/5] overflow-hidden rounded-[22px] lg:aspect-square">
-                <Image
-                  src="/founder.jpg"
-                  alt={isUrdu ? 'محمد حیدر، بانی، دی ایگروپرینیورز' : 'Muhammad Haider, Founder of The Agropreneurs'}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 768px) 100vw, 38vw"
-                />
-              </div>
-            </div>
-
-            <div>
-              <p className="mb-3 text-sm font-bold uppercase tracking-[0.18em] text-emerald-700">
-                {isUrdu ? 'بانی کا پیغام' : "FOUNDER'S MESSAGE"}
-              </p>
-              <h2 className="mb-4 text-3xl font-bold leading-tight tracking-tight text-green-900 sm:text-4xl">
-                {isUrdu ? 'آئیے زراعت کا مستقبل مل کر بنائیں۔' : 'Let’s build agriculture’s future together.'}
-              </h2>
-              <p className="text-base leading-8 text-slate-700 sm:text-lg">
+              <p className="mt-4 text-base leading-8 text-slate-700 sm:text-lg">
                 {isUrdu
-                  ? 'ہم نے VISION 2040: Securing the Future of Agriculture in Pakistan کے ساتھ ایک ایسا سفر شروع کیا جس کا مقصد زراعت کے بارے میں حقیقی سمت، مسائل اور امکانات کو سامنے لانا ہے۔ اس کا آغاز ایک زرعی کمیونٹی سروے سے ہوا، جس نے غذائی بحران اور تجاویز کے بارے میں لوگوں کے خیالات کو دریافت کیا۔ یہ ہمارے انداز کی عکاسی ہے: پہلے سنو، پھر مسئلہ سمجھو، اور بعد میں عملی علم، ٹیکنالوجی، مصنوعات، خدمات اور مواقع کے ذریعے بہتر حل پیدا کرو۔'
-                  : 'We began with VISION 2040: Securing the Future of Agriculture in Pakistan, a journey focused on uncovering the real direction, challenges and opportunities in agriculture. It started with an Agriculture Community Survey, exploring perspectives on the food crisis and possible measures. This reflects our approach: listen first, understand the challenge, and then connect people with practical knowledge, technology, products, services and opportunities to create sustainable value.'}
+                  ? 'ہم زرعی برادری کی حقیقی ضروریات، چیلنجز اور خدشات کو سمجھنے سے آغاز کرتے ہیں۔ ہمارا پہلا منصوبہ، VISION 2040 — پاکستان میں زراعت کے مستقبل کا تحفظ، زرعی کمیونٹی سروے کے ذریعے غذائی بحران اور ممکنہ اقدامات کے بارے میں آرا جاننے کے لیے شروع ہوا۔ ہمارا طریقہ یہی ہے: پہلے سننا، چیلنج سمجھنا، پھر عملی علم، ٹیکنالوجی، مصنوعات، خدمات اور مواقع کے ذریعے دیرپا قدر پیدا کرنا۔'
+                  : 'We start by understanding the real needs, challenges and concerns of the agricultural community. Our first project, VISION 2040 — Securing the Future of Agriculture in Pakistan, began with an Agriculture Community Survey exploring perspectives on the food crisis and possible measures. This reflects our approach: listen first, understand the challenges, and then connect people with practical knowledge, technology, products, services and opportunities to develop solutions that create real and lasting value.'}
               </p>
-              <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                <div>
-                  <p className="text-lg font-semibold text-green-900">Muhammad Haider</p>
-                  <p className="text-sm uppercase tracking-[0.15em] text-emerald-700">
-                    {isUrdu ? 'بانی، The Agropreneurs' : 'Founder, The Agropreneurs'}
-                  </p>
-                </div>
-                <Link
-                  href="/founder"
-                  className="inline-flex items-center gap-2 rounded-full bg-green-900 px-5 py-3 text-sm font-semibold transition-colors hover:bg-green-800"
-                  style={{ color: '#fff' }}
-                >
-                  {isUrdu ? 'بانی کے بارے میں مزید' : 'Read more'}
-                  <ArrowRight size={16} />
-                </Link>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section className="bg-gradient-to-r from-[#173b2a] via-[#204a34] to-[#2d5a3c] px-5 py-16 text-white sm:px-6 sm:py-20 lg:px-8">
-          <div className="mx-auto max-w-6xl text-center">
-            <p className="mb-3 text-sm font-bold uppercase tracking-[0.18em] text-emerald-200">
-              {isUrdu ? 'ہم کیوں اہم ہیں' : 'Why It Matters'}
-            </p>
-            <h2 className="mx-auto max-w-4xl text-3xl font-bold leading-tight tracking-tight sm:text-4xl">
-              {isUrdu ? 'زراعت کو جدید، پائیدار اور خوشحال بنانا' : 'Building agriculture that is smarter, stronger and more sustainable'}
-            </h2>
-            <p className="mx-auto mt-5 max-w-3xl text-base leading-8 text-emerald-50/90 sm:text-lg">
-              {isUrdu
-                ? 'ہمہ کو مل کر آگے بڑھنا ہے تاکہ اگلی نسل زراعت کو ایک آپشن، ایک موقع اور ایک پائیدار مستقبل کے طور پر دیکھ سکے۔'
-                : 'We want to inspire the next generation to see agriculture as a sector of opportunity, growth and long-term sustainability.'}
-            </p>
-            <div className="mt-8 flex flex-col justify-center gap-4 sm:flex-row">
-              <Link href="/survey-form" className="inline-flex items-center justify-center rounded-full bg-white px-6 py-3 text-base font-semibold transition hover:bg-emerald-50" style={{ color: '#21432f' }}>
-                {isUrdu ? 'سروے بھریں' : 'Take the Survey'}
-              </Link>
-              <Link href="/introduction" className="inline-flex items-center justify-center rounded-full border border-white/60 bg-transparent px-6 py-3 text-base font-semibold transition hover:bg-white/10" style={{ color: '#fff' }}>
-                {isUrdu ? 'VISION 2040 دیکھیں' : 'Explore VISION 2040'}
-              </Link>
             </div>
           </div>
         </section>

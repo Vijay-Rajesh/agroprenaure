@@ -178,7 +178,7 @@ export default function HomePage() {
               className="homepage-founder-name mt-3 font-semibold text-emerald-700"
               dir="rtl"
               lang="ur"
-            >
+         >
               محمد حیدر
             </p>
           </div>

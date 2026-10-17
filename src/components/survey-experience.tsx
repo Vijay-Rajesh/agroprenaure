@@ -467,11 +467,14 @@ export default function SurveyExperience({ formOnly = false }: { formOnly?: bool
             <p className="eyebrow">{isUrdu ? 'بانی کا پیغام' : "FOUNDER'S MESSAGE"}</p>
             <h2>{isUrdu ? 'آئیے زراعت کا مستقبل مل کر بنائیں۔' : 'Let’s build agriculture’s future together.'}</h2>
             <p>{isUrdu
-              ? 'میرا یقین ہے کہ پاکستان کی زرعی برادری کا ہر فرد ایک مضبوط اور پائیدار مستقبل کی تشکیل میں اہم کردار ادا کرتا ہے۔ اسی لیے ہم نے ایک ایسا پلیٹ فارم شروع کیا ہے جہاں کسان اپنے تجربات، خیالات اور ترجیحات ایک دوسرے کے ساتھ بانٹ سکیں۔'
-              : 'I believe every member of Pakistan’s agricultural community has an important role in shaping a stronger, more sustainable future. We created this platform so farmers can share their experience, ideas and priorities.'}</p>
+              ? 'زراعت نے ہمیشہ پاکستان کے دل کے قریب مقام رکھا ہے۔ یہ ہمارے لوگوں کو کھانا فراہم کرتی ہے، ہمارے معاشروں کو سہارا دیتی ہے اور ہماری معیشت میں اہم کردار ادا کرتی ہے۔ The Agropreneurs اس سادہ وژن کے ساتھ قائم ہوا کہ کسان، تعلیمی ادارے، کاروباری برادری اور تنظیمیں ایک دوسرے کے ساتھ علم کا اشتراک کریں، لوگوں کو مواقع سے جوڑیں اور زرعی صنعت کی ترقی میں معاونت کریں۔'
+              : 'Agriculture has always been close to the heart of Pakistan. It feeds our people, supports our communities, and plays an important role in our economy. The Agropreneurs was founded with a simple vision: to bring farmers, educational institutions, the business community and organizations together to share knowledge, connect people with opportunities and support the growth of the agro industry.'}</p>
             <p>{isUrdu
-              ? 'آپ کی آواز اس سفر کا اہم حصہ ہے۔ آئیے مل کر اپنے کسانوں کو بااختیار بنائیں اور آنے والی نسلوں کے لیے زراعت کو بہتر بنائیں۔'
-              : 'Your voice matters in this journey. Together, we can support our farmers and help create better opportunities for the generations ahead.'}</p>
+              ? 'ہمارا فلسفہ سادہ ہے: جب زراعت کے لوگ علم، ٹولز اور مواقع حاصل کریں، تو زراعت آگے بڑھے گی۔ ہم زرعی برادری کے سامنے آنے والے چیلنجز کو سن کر انہیں عملی حل، خیالات اور مواقع سے جوڑنے کے لیے کام کرتے ہیں۔ VISION 2040 – Securing the Future of Agriculture in Pakistan کے ذریعے ہم آنے والی نسل کو زراعت کو مواقع اور ترقی کا شعبہ سمجھنے کے لیے متاثر کرنا چاہتے ہیں اور ایک مضبوط، ذہین اور پائیدار زرعی مستقبل کے لیے کردار ادا کرنا چاہتے ہیں۔'
+              : 'Our philosophy is simple: agriculture moves forward when its people have the knowledge, tools, and opportunities to grow. At The Agropreneurs, we listen to the challenges faced by the agricultural community and work to connect people with practical solutions, ideas, and opportunities. Through initiatives such as VISION 2040 – Securing the Future of Agriculture in Pakistan, we want to inspire the next generation to see agriculture as a sector of opportunity and growth, and contribute to a stronger, smarter, and more sustainable future for agriculture.'}</p>
+            <p>{isUrdu
+              ? 'The Agropreneurs ہمارے عزم کا اظہار ہے کہ ہم پائیدار اور ذہین حلوں کے ذریعے زراعت کو تبدیل کریں۔'
+              : 'The Agropreneurs is our commitment to transforming agriculture through sustainable and smart solutions.'}</p>
             <div className="founder-signature">
               <strong>Muhammad Haider</strong>
               <span>{isUrdu ? 'بانی، دی ایگروپرینیورز' : 'Founder, The Agropreneurs'}</span>

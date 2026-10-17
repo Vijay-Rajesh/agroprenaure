@@ -166,7 +166,7 @@ textarea:focus-visible {
 .brand-copy small {
   white-space: nowrap;
   color: #2f6b4a;
-  font-size: 9px;
+  font-size: 8.5px;
   font-weight: 700;
   letter-spacing: 0.015em;
   line-height: 1.4;
@@ -469,7 +469,7 @@ textarea:focus-visible {
   }
 
   .brand-copy small {
-    font-size: 9px;
+    font-size: 8.5px;
   }
 
   .primary-navigation {
@@ -578,7 +578,7 @@ textarea:focus-visible {
   }
 
   .brand-copy small {
-    font-size: 9px;
+    font-size: 8.5px;
   }
 
   .primary-navigation {
@@ -646,11 +646,11 @@ textarea:focus-visible {
 }
 
 .home-hero-section {
-  min-height: clamp(380px, 54svh, 520px);
+  /* header (110px) + quote section (~200px) ke baad jo jagah bachti hai wo hero ki */
+  min-height: clamp(420px, calc(100svh - 310px), 900px);
 }
-
 .home-hero-section .hero-photo {
-  background-position: center center;
+  background-position:  center;
   background-size: cover;
 }
 
@@ -3339,7 +3339,7 @@ textarea.admin-question-input {
   .brand-mark { width: 76px; height: 76px; }
   .primary-navigation { max-height: calc(100svh - 88px); }
   .brand-copy strong { font-size: 13px; }
-  .brand-copy small { font-size: 9px; }
+  .brand-copy small { font-size: 8.5px; }
   .header-actions { gap: 8px; }
   .button-small { min-height: 37px; padding: 0 10px; font-size: 11px; }
   .language-button { font-size: 12px; }

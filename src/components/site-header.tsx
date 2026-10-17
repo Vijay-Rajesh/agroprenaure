@@ -126,8 +126,8 @@ export default function SiteHeader({ ctaHref }: SiteHeaderProps) {
     <header className="site-header sticky top-0 z-50">
       <div className="header-inner mx-auto flex w-full max-w-6xl items-center justify-between px-5">
         <Link className="brand" href="/" aria-label={text('The Agropreneurs home')} onClick={closeNavigation}>
-          <span className="brand-mark"><Image src="/logo1.png" alt="" width={38} height={38} /></span>
-          <span className="brand-copy"><strong>The Agropreneurs</strong><small>{text('SMART | SUSTAINABLE | AGRICULTURE')}</small></span>
+          <span className="brand-mark"><Image src="/logo1.png" alt="" width={98} height={38} /></span>
+          <span className="brand-copy"><strong>The Agropreneurs</strong><small>{text('SUSTAINABLE | SMART | AGRICULTURE')}</small></span>
         </Link>
         <nav
           className={`primary-navigation ${isMobileNavigationOpen ? 'mobile-open' : ''}`}
