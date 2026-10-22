@@ -311,6 +311,16 @@ textarea:focus-visible {
   box-shadow: 0 12px 30px rgb(27 50 33 / 14%);
 }
 
+.nav-accordion-panel[hidden] {
+  display: none;
+}
+
+.agritech-navigation .nav-accordion-panel {
+  top: 100%;
+  max-height: min(70vh, 560px);
+  overflow-y: auto;
+}
+
 .nav-subitem {
   display: flex;
   width: 100%;

@@ -1,0 +1,16 @@
+export const agritechNavigationTopics = [
+  { number: 1, slug: 'about-agritech', label: 'ABOUT AGRITECH' },
+  { number: 2, slug: 'machinery-mechanization', label: 'MACHINERY & MECHANIZATION' },
+  { number: 3, slug: 'water-management', label: 'WATER MANAGEMENT' },
+  { number: 4, slug: 'environmental-monitoring', label: 'ENVIRONMENTAL MONITORING' },
+  { number: 5, slug: 'smart-devices-iot', label: 'SMART DEVICES & IoT' },
+  { number: 6, slug: 'digital-farming', label: 'DIGITAL FARMING' },
+  { number: 7, slug: 'drones-remote-sensing', label: 'DRONES & REMOTE SENSING' },
+  { number: 8, slug: 'ai-advanced-agritech', label: 'AI & ADVANCED AGRITECH' },
+  { number: 9, slug: 'controlled-environment', label: 'CONTROLLED ENVIRONMENT' },
+  { number: 10, slug: 'livestock-dairy', label: 'LIVESTOCK & DAIRY' },
+  { number: 11, slug: 'post-harvesting', label: 'POST HARVESTING' },
+  { number: 12, slug: 'agricultural-software', label: 'AGRICULTURAL SOFTWARE' },
+  { number: 13, slug: 'emerging-technologies', label: 'EMERGING TECHNOLOGIES' },
+  { number: 14, slug: 'practical-applications', label: 'PRACTICAL APPLICATIONS' },
+] as const;

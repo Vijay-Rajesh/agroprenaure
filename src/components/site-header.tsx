@@ -8,6 +8,7 @@ import { navigationSections } from '@/lib/site-content';
 import { useSiteData } from '@/components/site-data-provider';
 import { useSiteLanguage } from '@/components/language-provider';
 import { translateSiteText } from '@/lib/site-translations';
+import { agritechNavigationTopics } from '@/lib/agritech-navigation';
 
 function FacebookIcon(props: React.ComponentProps<'svg'>) {
   return (
@@ -64,16 +65,43 @@ export default function SiteHeader({ ctaHref }: SiteHeaderProps) {
   const aboutSectionIndex = siteSections.findIndex((section) =>
     section.key === 'about-us' || section.labelEn.trim().toLowerCase() === 'about us',
   );
-  const visibleSections = [...siteSections].map((section) => ({
-    ...section,
-    items: section.items.filter((item) => {
+  const visibleSections = [...siteSections].map((section) => {
+    const isResearchSection = section.key.trim().toLowerCase() === 'research' ||
+      section.labelEn.trim().toLowerCase() === 'research';
+    const items = section.items.filter((item) => {
       const label = item.labelEn.trim().toLowerCase();
       return item.href !== '/survey-form' &&
         !/survey/i.test(item.labelEn) &&
         !/about\s+vision\s*2040/i.test(label) &&
         item.href !== '/vision';
-    }),
-  }));
+    });
+
+    return isResearchSection
+      ? {
+        key: 'agritech',
+        labelEn: 'AGRITECH',
+        labelUr: 'زرعی ٹیکنالوجی',
+        items: agritechNavigationTopics.map(({ label, slug }) => ({
+          labelEn: label,
+          labelUr: label,
+          href: `/agritech/${slug}`,
+        })),
+      }
+      : { ...section, items };
+  });
+
+  if (!visibleSections.some((section) => section.key === 'agritech')) {
+    visibleSections.push({
+      key: 'agritech',
+      labelEn: 'AGRITECH',
+      labelUr: 'زرعی ٹیکنالوجی',
+      items: agritechNavigationTopics.map(({ label, slug }) => ({
+        labelEn: label,
+        labelUr: label,
+        href: `/agritech/${slug}`,
+      })),
+    });
+  }
 
   if (founderLink || introductionLink) {
     if (aboutSectionIndex === -1) {
@@ -149,12 +177,18 @@ export default function SiteHeader({ ctaHref }: SiteHeaderProps) {
             const sectionId = `navigation-${section.key}`;
             const isExpanded = openNavigation === section.key;
             return (
-              <div className={`nav-accordion ${isExpanded ? 'is-open' : ''}`} key={section.key}>
+              <div
+                className={`nav-accordion ${section.key === 'agritech' ? 'agritech-navigation' : ''} ${isExpanded ? 'is-open' : ''}`}
+                key={section.key}
+                onMouseEnter={section.key === 'agritech' ? () => setOpenNavigation(section.key) : undefined}
+                onMouseLeave={section.key === 'agritech' ? () => setOpenNavigation(null) : undefined}
+              >
                 <button
                   className="nav-accordion-trigger"
                   type="button"
                   aria-expanded={isExpanded}
                   aria-controls={sectionId}
+                  onFocus={section.key === 'agritech' ? () => setOpenNavigation(section.key) : undefined}
                   onClick={() => setOpenNavigation((current) => current === section.key ? null : section.key)}
                 >
                   {isUrdu ? section.labelUr : section.labelEn}<ChevronDown size={13} aria-hidden="true" />
