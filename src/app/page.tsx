@@ -201,7 +201,6 @@ export default function HomePage() {
               </Link>
             </div>
             <div className="border-t border-emerald-100 bg-white px-5 py-4">
-              <h2 className="text-base font-bold text-green-900">Start Survey</h2>
               <p className="mt-1 text-sm leading-7 text-slate-700" dir="rtl" lang="ur">
                 سروے میں حصہ لیں اور پاکستان میں زراعت کے بہتر مستقبل کے لیے اپنا کردار ادا کریں۔
               </p>

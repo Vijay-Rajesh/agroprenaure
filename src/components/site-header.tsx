@@ -182,11 +182,16 @@ export default function SiteHeader({ ctaHref }: SiteHeaderProps) {
           {visibleSections.filter((section) => section.key !== 'home' && section.labelEn.trim().toLowerCase() !== 'home').map((section) => {
             const isAboutSection = section.key === 'about-us' || section.labelEn.trim().toLowerCase() === 'about us';
             const isVisionSection = section.key === 'vision-2040' || section.labelEn.trim().toLowerCase() === 'vision 2040';
+            const isNewsMediaSection = section.key.trim().toLowerCase() === 'news-media' ||
+              section.labelEn.trim().toLowerCase() === 'news & media';
             if (isAboutSection) {
               return <Link className="nav-home uppercase" href="/about" key={section.key} onClick={closeNavigation}>{text('About Us')}</Link>;
             }
             if (isVisionSection) {
               return <Link className="nav-home uppercase" href="/vision" key={section.key} onClick={closeNavigation}>{isUrdu ? section.labelUr : section.labelEn}</Link>;
+            }
+            if (isNewsMediaSection) {
+              return <Link className="nav-home uppercase" href="/news-media/gallery" key={section.key} onClick={closeNavigation}>{isUrdu ? section.labelUr : section.labelEn}</Link>;
             }
 
             const sectionId = `navigation-${section.key}`;

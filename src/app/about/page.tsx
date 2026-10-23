@@ -38,8 +38,8 @@ export default function AboutPage() {
       <SiteHeader ctaHref="/survey-form" />
       <main className="min-h-screen bg-[#f5f7f1] text-slate-800" dir={dir}>
         <section className="px-5 py-10 sm:px-6 sm:py-12 lg:px-8">
-          <div className="mx-auto grid max-w-6xl gap-6 rounded-[28px] border border-emerald-200 bg-gradient-to-br from-white to-emerald-50 p-4 shadow-[0_12px_35px_rgba(20,83,45,0.05)] sm:gap-8 sm:p-6 lg:grid-cols-[0.95fr_1.05fr] lg:items-start lg:gap-10 lg:p-8">
-            <div>
+          <div className="mx-auto grid max-w-6xl gap-6 rounded-[28px] border border-emerald-200 bg-gradient-to-br from-white to-emerald-50 p-4 shadow-[0_12px_35px_rgba(20,83,45,0.05)] sm:gap-8 sm:p-6 lg:grid-cols-[0.95fr_1.05fr] lg:gap-10 lg:p-8">
+            <div className="flex flex-col">
               <div className="relative overflow-hidden rounded-[26px] border border-emerald-200 bg-white p-2.5 shadow-[0_12px_30px_rgba(20,83,45,0.07)] sm:p-3">
                 <div className="relative aspect-[4/5] overflow-hidden rounded-[22px]">
                   <Image
@@ -66,14 +66,14 @@ export default function AboutPage() {
               </div>
             </div>
 
-            <div>
+            <div className="flex flex-col">
               <p className="mb-3 text-sm font-bold uppercase tracking-[0.18em] text-emerald-700">
                 {isUrdu ? 'بانی کا پیغام' : "FOUNDER'S MESSAGE"}
               </p>
-              <h1 className="mb-4 text-3xl font-bold leading-tight tracking-tight text-green-900 sm:text-4xl">
+              <h1 className="mb-4 text-2xl font-bold leading-tight tracking-tight text-green-900 sm:text-3xl">
                 {isUrdu ? 'آئیے زراعت کا مستقبل مل کر بنائیں۔' : 'Connecting People to Smart Agriculture & Sustainable Resources.'}
               </h1>
-              <div className="max-w-2xl space-y-4 text-base leading-7 text-slate-700 sm:space-y-5 sm:leading-7 lg:text-[1.05rem] lg:leading-8">
+              <div className="max-w-2xl space-y-3 text-base leading-7 text-slate-700 sm:space-y-4 lg:flex lg:flex-1 lg:flex-col lg:justify-between lg:space-y-0 lg:text-[1.05rem] lg:leading-7">
                 <p>
                   {isUrdu
                     ? 'زراعت نے ہمیشہ پاکستان کے دل کے قریب مقام رکھا ہے۔ یہ ہمارے لوگوں کو خوراک فراہم کرتی ہے، ہماری برادریوں کو سہارا دیتی ہے اور ہماری معیشت میں اہم کردار ادا کرتی ہے۔ The Agropreneurs ایک سادہ وژن کے تحت قائم ہوا: کسانوں، تعلیمی اداروں، کاروباری برادری اور تنظیموں کو اکٹھا کرنا تاکہ علم کا اشتراک ہو، لوگوں کو مواقع سے جوڑا جائے اور زرعی صنعت کی ترقی میں مدد ملے۔'
