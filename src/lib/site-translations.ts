@@ -17,6 +17,7 @@ const uiTranslations: Record<string, string> = {
   RESEARCH: 'تحقیق',
   COMMERCIAL: 'تجارتی شعبہ',
   'NEWS & MEDIA': 'خبریں اور میڈیا',
+  'Newspaper Gallery': 'اخباری گیلری',
   Introduction: 'تعارف',
   "Founder's Message": 'بانی کا پیغام',
   'About Vision 2040': 'وژن 2040 کے بارے میں',

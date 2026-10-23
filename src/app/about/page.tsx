@@ -71,7 +71,7 @@ export default function AboutPage() {
                 {isUrdu ? 'بانی کا پیغام' : "FOUNDER'S MESSAGE"}
               </p>
               <h1 className="mb-4 text-3xl font-bold leading-tight tracking-tight text-green-900 sm:text-4xl">
-                {isUrdu ? 'آئیے زراعت کا مستقبل مل کر بنائیں۔' : 'Let’s build agriculture’s future together.'}
+                {isUrdu ? 'آئیے زراعت کا مستقبل مل کر بنائیں۔' : 'Connecting People to Smart Agriculture & Sustainable Resources.'}
               </h1>
               <div className="max-w-2xl space-y-4 text-base leading-7 text-slate-700 sm:space-y-5 sm:leading-7 lg:text-[1.05rem] lg:leading-8">
                 <p>

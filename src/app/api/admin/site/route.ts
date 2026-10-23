@@ -275,11 +275,50 @@ export async function PATCH(request: Request) {
 
   const body = await parseBody(request);
   if ('error' in body) return response({ error: body.error }, 400);
-  const envelope = z.object({ kind: z.enum(['page', 'navigation', 'navigation-section', 'home']), id: z.string().optional() }).passthrough().safeParse(body.body);
+  const envelope = z.object({ kind: z.enum(['page', 'navigation', 'navigation-section', 'navigation-order', 'home']), id: z.string().optional() }).passthrough().safeParse(body.body);
   if (!envelope.success || (['page', 'navigation'].includes(envelope.data.kind) && !envelope.data.id)) return response({ error: 'A CMS item ID is required.' }, 400);
 
   try {
     const sql = neon(process.env.DATABASE_URL);
+    if (envelope.data.kind === 'navigation-order') {
+      const parsed = z.object({
+        kind: z.literal('navigation-order'),
+        section_keys: z.array(z.string().trim().min(1).max(80)).min(1).max(100),
+      }).strict().safeParse(body.body);
+      if (!parsed.success || new Set(parsed.data?.section_keys ?? []).size !== parsed.data?.section_keys.length) {
+        return response({ error: 'The navbar section order is invalid.' }, 400);
+      }
+
+      const currentSections = await sql`
+        SELECT DISTINCT section_key
+        FROM site_navigation_items
+        WHERE section_key <> '__home'
+      `;
+      const currentKeys = currentSections.map((section) => String(section.section_key));
+      if (
+        currentKeys.length !== parsed.data.section_keys.length
+        || currentKeys.some((key) => !parsed.data.section_keys.includes(key))
+      ) {
+        return response({ error: 'The navbar has changed. Reload the page and try again.' }, 409);
+      }
+
+      for (const [groupIndex, sectionKey] of parsed.data.section_keys.entries()) {
+        const items = await sql`
+          SELECT id FROM site_navigation_items
+          WHERE section_key = ${sectionKey}
+          ORDER BY sort_order, created_at, id
+        `;
+        for (const [itemIndex, item] of items.entries()) {
+          await sql`
+            UPDATE site_navigation_items
+            SET sort_order = ${(groupIndex + 1) * 10000 + itemIndex}, updated_at = now()
+            WHERE id = ${item.id}
+          `;
+        }
+      }
+
+      return response({ success: true }, 200);
+    }
     if (envelope.data.kind === 'navigation-section') {
       const parsed = z.object({
         kind: z.literal('navigation-section'),

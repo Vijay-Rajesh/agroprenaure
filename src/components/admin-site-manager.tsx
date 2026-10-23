@@ -1,8 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Archive, Eye, LoaderCircle, Pencil, Plus, RotateCcw, Save, Trash2, X } from 'lucide-react';
+import { Archive, ArrowDown, ArrowUp, Eye, GripVertical, LoaderCircle, Pencil, Plus, RotateCcw, Save, Trash2, X } from 'lucide-react';
 import { defaultHomeHero, type HomeHeroSettings } from '@/lib/site-settings';
+import AdminNewspaperGallery from '@/components/admin-newspaper-gallery';
 
 type SitePageRecord = {
   id: string;
@@ -42,7 +43,7 @@ type NavigationRecord = {
 
 type PageDraft = Omit<SitePageRecord, 'id'>;
 type NavigationDraft = Omit<NavigationRecord, 'id'>;
-type CmsTab = 'pages' | 'navigation' | 'home';
+type CmsTab = 'pages' | 'navigation' | 'home' | 'newspapers';
 
 const emptyPage: PageDraft = {
   path: '/new-page',
@@ -132,6 +133,8 @@ export default function AdminSiteManager() {
   const [togglingNavigationId, setTogglingNavigationId] = useState<string | null>(null);
   const [togglingNavigationGroupKey, setTogglingNavigationGroupKey] = useState<string | null>(null);
   const [expandedNavigationGroups, setExpandedNavigationGroups] = useState<Set<string>>(() => new Set());
+  const [draggedNavigationGroupKey, setDraggedNavigationGroupKey] = useState<string | null>(null);
+  const [isSavingNavigationOrder, setIsSavingNavigationOrder] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState('');
@@ -385,7 +388,86 @@ export default function AdminSiteManager() {
     else groups.push({ key: item.section_key, labelEn: item.section_label_en, labelUr: item.section_label_ur, items: [item] });
     return groups;
   }, []);
+  const pinnedNavigationGroup = navigationGroups.find((group) => group.key === '__home');
+  const draggableNavigationGroups = navigationGroups.filter((group) => group.key !== '__home');
+  const liveNavigationLabel = (group: typeof navigationGroups[number]) => {
+    if (group.key === 'about-us') return 'About Us';
+    if (group.key === 'vision-2040') return 'VISION 2040';
+    if (group.key === 'research') return 'AGRITECH';
+    return group.labelEn;
+  };
+  const liveNavigationLabelUr = (group: typeof navigationGroups[number]) => {
+    if (group.key === 'about-us') return 'ہمارے بارے میں';
+    if (group.key === 'vision-2040') return 'وژن 2040';
+    if (group.key === 'research') return 'زرعی ٹیکنالوجی';
+    return group.labelUr;
+  };
   const editingNavigationGroupKey = navigation.find((item) => item.id === navigationId)?.section_key;
+  async function saveNavigationOrder(sectionKeys: string[]) {
+    if (isSavingNavigationOrder) return;
+    const previousNavigation = navigation;
+    const orderedGroups = sectionKeys.map((key) => navigationGroups.find((group) => group.key === key)).filter(
+      (group): group is typeof navigationGroups[number] => Boolean(group),
+    );
+    if (orderedGroups.length !== draggableNavigationGroups.length) {
+      setError('The navbar order could not be changed. Reload the page and try again.');
+      return;
+    }
+
+    const reorderedItems = orderedGroups.flatMap((group, groupIndex) =>
+      group.items.map((item, itemIndex) => ({
+        ...item,
+        sort_order: (groupIndex + 1) * 10000 + itemIndex,
+      })),
+    );
+    setNavigation([...(pinnedNavigationGroup?.items ?? []), ...reorderedItems]);
+    setIsSavingNavigationOrder(true);
+    setError('');
+    setNotice('');
+
+    try {
+      const response = await fetch('/api/admin/site', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ kind: 'navigation-order', section_keys: sectionKeys }),
+      });
+      const result = await response.json() as { error?: string };
+      if (!response.ok) throw new Error(result.error ?? 'Could not save navbar order.');
+      setNotice('Navbar order updated.');
+      try {
+        await reload();
+      } catch (reloadError) {
+        setError(reloadError instanceof Error ? reloadError.message : 'Navbar order was saved, but the latest content could not be loaded.');
+      }
+    } catch (orderError) {
+      setNavigation(previousNavigation);
+      setError(orderError instanceof Error ? orderError.message : 'Could not save navbar order.');
+    } finally {
+      setIsSavingNavigationOrder(false);
+      setDraggedNavigationGroupKey(null);
+    }
+  }
+
+  function moveNavigationGroup(sourceKey: string, targetKey: string) {
+    const keys = draggableNavigationGroups.map((group) => group.key);
+    const sourceIndex = keys.indexOf(sourceKey);
+    const targetIndex = keys.indexOf(targetKey);
+    if (sourceIndex === -1 || targetIndex === -1 || sourceIndex === targetIndex || isSavingNavigationOrder) return;
+    keys.splice(sourceIndex, 1);
+    keys.splice(targetIndex, 0, sourceKey);
+    void saveNavigationOrder(keys);
+  }
+
+  function moveNavigationGroupByStep(groupKey: string, direction: -1 | 1) {
+    const keys = draggableNavigationGroups.map((group) => group.key);
+    const index = keys.indexOf(groupKey);
+    const nextIndex = index + direction;
+    if (index === -1 || nextIndex < 0 || nextIndex >= keys.length) return;
+    keys.splice(index, 1);
+    keys.splice(nextIndex, 0, groupKey);
+    void saveNavigationOrder(keys);
+  }
+
   const navigationEditor = navigationDraft && <form className="admin-cms-form" onSubmit={saveNavigation}>
     <div className="admin-question-editor-heading"><h3>{navigationId ? 'Edit navbar item' : 'New navbar item'}</h3><button className="admin-icon-button" type="button" aria-label="Close navbar editor" onClick={() => setNavigationDraft(null)}><X size={17} /></button></div>
     <div className="admin-cms-grid">
@@ -403,7 +485,7 @@ export default function AdminSiteManager() {
 
   return (
     <section className="admin-site-manager" aria-labelledby="site-manager-title">
-      <div className="admin-site-heading"><div><p className="admin-kicker">WEBSITE CMS</p><h2 id="site-manager-title">Website content</h2><p>Manage published pages, navbar links, and the homepage hero.</p></div></div>
+      <div className="admin-site-heading"><div><p className="admin-kicker">WEBSITE CMS</p><h2 id="site-manager-title">Website content</h2><p>Manage pages, navbar links, homepage content, and newspaper images.</p></div></div>
 
       <div className="admin-cms-summary">
         <div className="admin-mini-stat">
@@ -423,6 +505,7 @@ export default function AdminSiteManager() {
       <div className="admin-view-tabs" role="tablist" aria-label="Website content sections">
         <button type="button" role="tab" aria-selected={tab === 'pages'} onClick={() => setTab('pages')}>Pages</button>
         <button type="button" role="tab" aria-selected={tab === 'navigation'} onClick={() => setTab('navigation')}>Navbar</button>
+        <button type="button" role="tab" aria-selected={tab === 'newspapers'} onClick={() => setTab('newspapers')}>Newspaper gallery</button>
         <button type="button" role="tab" aria-selected={tab === 'home'} onClick={() => setTab('home')}>Homepage hero</button>
       </div>
       {error && <p className="admin-error admin-page-error" role="alert">{error}</p>}
@@ -461,25 +544,64 @@ export default function AdminSiteManager() {
         </div>}
 
         {tab === 'navigation' && <div className="admin-cms-panel">
-          <div className="admin-cms-list-heading"><div><h3>Navbar items</h3><p>Change labels, group sections, order, or visibility.</p></div><button className="button" type="button" onClick={beginNewNavigation}><Plus size={16} />Add navbar item</button></div>
+          <div className="admin-cms-list-heading"><div><h3>Live navbar layout</h3><p>Drag a section to change its live position. You can also move sections with the arrow buttons.</p></div><button className="button" type="button" onClick={beginNewNavigation}><Plus size={16} />Add navbar item</button></div>
           {navigationDraft && !navigationId && navigationEditor}
+          <div className="admin-nav-live-preview" aria-label="Current live navbar order">
+            <span className="admin-nav-live-preview-label">Live order</span>
+            {pinnedNavigationGroup && <span className="admin-nav-live-chip is-pinned">{liveNavigationLabel(pinnedNavigationGroup)} <small>Pinned</small></span>}
+            {draggableNavigationGroups.map((group) => <span className="admin-nav-live-chip" key={group.key}>{liveNavigationLabel(group)}</span>)}
+          </div>
+          {isSavingNavigationOrder && <p className="admin-question-notice" role="status"><LoaderCircle className="admin-toggle-spinner" size={14} /> Saving navbar order…</p>}
           <div className="admin-nav-groups">
-            {navigationGroups.map((group, index) => <section className="admin-nav-group" key={group.key}>
+            {navigationGroups.map((group, index) => {
+              const isPinned = group.key === '__home';
+              const orderedGroups = isPinned ? navigationGroups : draggableNavigationGroups;
+              const orderedIndex = isPinned ? -1 : draggableNavigationGroups.findIndex((item) => item.key === group.key);
+              const isExpanded = expandedNavigationGroups.has(group.key) || group.key === editingNavigationGroupKey;
+              return <section
+                className={`admin-nav-group ${draggedNavigationGroupKey === group.key ? 'is-dragging' : ''} ${isPinned ? 'is-pinned' : ''}`}
+                key={group.key}
+                draggable={!isPinned && !isSavingNavigationOrder}
+                onDragStart={(event) => {
+                  if (isPinned) return;
+                  event.dataTransfer.effectAllowed = 'move';
+                  event.dataTransfer.setData('text/plain', group.key);
+                  setDraggedNavigationGroupKey(group.key);
+                }}
+                onDragOver={(event) => {
+                  if (!isPinned && draggedNavigationGroupKey && draggedNavigationGroupKey !== group.key) {
+                    event.preventDefault();
+                    event.dataTransfer.dropEffect = 'move';
+                  }
+                }}
+                onDrop={(event) => {
+                  event.preventDefault();
+                  const sourceKey = event.dataTransfer.getData('text/plain') || draggedNavigationGroupKey;
+                  if (sourceKey && !isPinned) moveNavigationGroup(sourceKey, group.key);
+                }}
+                onDragEnd={() => setDraggedNavigationGroupKey(null)}
+              >
               <div className="admin-nav-group-heading">
-                <button className="admin-nav-group-trigger" type="button" aria-expanded={expandedNavigationGroups.has(group.key) || group.key === editingNavigationGroupKey} aria-controls={`admin-nav-group-${index}`} onClick={() => setExpandedNavigationGroups((current) => {
+                {!isPinned && <span className="admin-nav-drag-handle" aria-hidden="true"><GripVertical size={18} /></span>}
+                <button className="admin-nav-group-trigger" type="button" aria-expanded={isExpanded} aria-controls={`admin-nav-group-${index}`} onClick={() => setExpandedNavigationGroups((current) => {
                   const next = new Set(current);
                   if (next.has(group.key)) next.delete(group.key);
                   else next.add(group.key);
                   return next;
                 })}>
-                  <span><strong>{group.labelEn}</strong><small dir="rtl">{group.labelUr || 'اردو نام نہیں'}</small></span>
+                  <span><strong>{liveNavigationLabel(group)}</strong><small dir="rtl">{liveNavigationLabelUr(group) || 'اردو نام نہیں'}</small></span>
                   <span className="admin-nav-group-count">{group.items.length} {group.items.length === 1 ? 'link' : 'links'}</span>
                 </button>
-                <button className={`admin-toggle-pill admin-nav-group-toggle ${group.items.every((item) => item.is_visible) ? 'is-enabled' : ''}`} type="button" disabled={togglingNavigationId !== null || togglingNavigationGroupKey !== null} aria-busy={togglingNavigationGroupKey === group.key} onClick={() => void toggleNavigationGroup(group)}>
-                  {togglingNavigationGroupKey === group.key ? <><LoaderCircle className="admin-toggle-spinner" size={14} />Saving…</> : group.items.every((item) => item.is_visible) ? 'Disable section' : 'Enable section'}
-                </button>
+                {!isPinned && <div className="admin-nav-group-controls">
+                  <button className="admin-icon-button" type="button" aria-label={`Move ${liveNavigationLabel(group)} earlier`} title="Move earlier" disabled={orderedIndex <= 0 || isSavingNavigationOrder} onClick={() => moveNavigationGroupByStep(group.key, -1)}><ArrowUp size={15} /></button>
+                  <button className="admin-icon-button" type="button" aria-label={`Move ${liveNavigationLabel(group)} later`} title="Move later" disabled={orderedIndex >= orderedGroups.filter((item) => item.key !== '__home').length - 1 || isSavingNavigationOrder} onClick={() => moveNavigationGroupByStep(group.key, 1)}><ArrowDown size={15} /></button>
+                  <button className={`admin-toggle-pill admin-nav-group-toggle ${group.items.every((item) => item.is_visible) ? 'is-enabled' : ''}`} type="button" disabled={togglingNavigationId !== null || togglingNavigationGroupKey !== null} aria-busy={togglingNavigationGroupKey === group.key} onClick={() => void toggleNavigationGroup(group)}>
+                    {togglingNavigationGroupKey === group.key ? <><LoaderCircle className="admin-toggle-spinner" size={14} />Saving…</> : group.items.every((item) => item.is_visible) ? 'Disable section' : 'Enable section'}
+                  </button>
+                </div>}
+                {isPinned && <span className="admin-nav-pinned-label">Always first</span>}
               </div>
-              {(expandedNavigationGroups.has(group.key) || group.key === editingNavigationGroupKey) && <div id={`admin-nav-group-${index}`} className="admin-nav-group-content">
+              {isExpanded && <div id={`admin-nav-group-${index}`} className="admin-nav-group-content">
               <ul className="admin-cms-list">{group.items.map((item) => <li className="admin-cms-row" key={item.id}>
                 <div><span className="admin-question-type">{item.is_visible ? 'Visible in navbar' : 'Hidden from navbar'} · {item.href}</span><h4>{item.label_en}</h4><p dir="rtl">{item.label_ur}</p></div>
                 <div className="admin-question-item-actions">
@@ -490,9 +612,12 @@ export default function AdminSiteManager() {
               </li>)}</ul>
               {navigationDraft && navigationId && group.key === editingNavigationGroupKey && navigationEditor}
               </div>}
-            </section>)}
+            </section>;
+            })}
           </div>
         </div>}
+
+        {tab === 'newspapers' && <AdminNewspaperGallery />}
 
         {tab === 'home' && <form className="admin-cms-form" onSubmit={saveHome}>
           <div className="admin-question-editor-heading"><h3>Homepage hero</h3><p>Update the opening message, section copy, and image.</p></div>

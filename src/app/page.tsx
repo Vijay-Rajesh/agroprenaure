@@ -184,24 +184,28 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* CTA Section */}
-        <section className="px-4 py-20 sm:px-6 lg:px-8 bg-gradient-to-r from-green-900 to-green-800">
-          <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
-              {isUrdu ? 'سروے میں حصہ لیں' : 'Participate in the Survey'}
-            </h2>
-            <p className="text-xl text-green-100 mb-8 max-w-2xl mx-auto">
-              {isUrdu
-                ? 'اپنی آواز سنائیں اور پاکستان میں زراعت کے مستقبل کو بہتر بنانے میں مدد کریں۔'
-                : 'Make your voice heard and help improve the future of agriculture in Pakistan.'}
-            </p>
-            <Link
-              href="/survey-form"
-              className="inline-flex items-center justify-center bg-white text-green-900 px-8 py-4 rounded-lg font-semibold hover:bg-green-50 transition-colors text-lg gap-2"
-            >
-              {isUrdu ? 'سروے شروع کریں' : 'Start Survey'}
-              <ArrowRight className="w-5 h-5" />
-            </Link>
+        <section className="bg-white px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
+          <div className="mx-auto max-w-4xl overflow-hidden rounded-2xl border border-emerald-200 bg-[#f9fbf7] text-center shadow-[0_12px_35px_rgba(20,83,45,0.07)]">
+            <div className="px-5 py-7 sm:px-10 sm:py-9">
+              <p className="mx-auto max-w-3xl text-base leading-8 text-slate-700 sm:text-lg">
+                {isUrdu
+                  ? 'سروے میں حصہ لیں اور پاکستان میں زراعت کے بہتر مستقبل میں اپنا کردار ادا کریں۔'
+                  : 'Participate in the survey and contribute to a better future for agriculture in Pakistan.'}
+              </p>
+              <Link
+                href="/survey-form"
+                className="mt-5 inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border border-green-800 bg-white px-6 py-2.5 text-sm font-semibold uppercase tracking-wide text-green-950 transition hover:bg-emerald-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-700 focus-visible:ring-offset-2"
+              >
+                {isUrdu ? 'سروے شروع کریں' : 'Start Survey'}
+                <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              </Link>
+            </div>
+            <div className="border-t border-emerald-100 bg-white px-5 py-4">
+              <h2 className="text-base font-bold text-green-900">Start Survey</h2>
+              <p className="mt-1 text-sm leading-7 text-slate-700" dir="rtl" lang="ur">
+                سروے میں حصہ لیں اور پاکستان میں زراعت کے بہتر مستقبل کے لیے اپنا کردار ادا کریں۔
+              </p>
+            </div>
           </div>
         </section>
       </main>

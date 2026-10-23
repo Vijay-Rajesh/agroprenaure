@@ -15,7 +15,8 @@ const cmsMigration = await readFile(new URL('../database/migrations/2026-10-01-s
 const surveyQuestionStepsMigration = await readFile(new URL('../database/migrations/2026-10-02-survey-question-steps.sql', import.meta.url), 'utf8');
 const optionalPersonalInfoMigration = await readFile(new URL('../database/migrations/2026-10-03-optional-personal-info.sql', import.meta.url), 'utf8');
 const profileQuestionsMigration = await readFile(new URL('../database/migrations/2026-10-04-manage-profile-questions.sql', import.meta.url), 'utf8');
-const statements = [schema, ageMigration, questionMigration, cmsMigration, surveyQuestionStepsMigration, optionalPersonalInfoMigration, profileQuestionsMigration]
+const newspaperGalleryMigration = await readFile(new URL('../database/migrations/2026-10-05-newspaper-gallery.sql', import.meta.url), 'utf8');
+const statements = [schema, ageMigration, questionMigration, cmsMigration, surveyQuestionStepsMigration, optionalPersonalInfoMigration, profileQuestionsMigration, newspaperGalleryMigration]
   .flatMap((source) => source.split(/;\s*(?:\r?\n|$)/))
   .map((statement) => statement.trim())
   .filter(Boolean);

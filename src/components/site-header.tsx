@@ -68,6 +68,8 @@ export default function SiteHeader({ ctaHref }: SiteHeaderProps) {
   const visibleSections = [...siteSections].map((section) => {
     const isResearchSection = section.key.trim().toLowerCase() === 'research' ||
       section.labelEn.trim().toLowerCase() === 'research';
+    const isNewsMediaSection = section.key.trim().toLowerCase() === 'news-media' ||
+      section.labelEn.trim().toLowerCase() === 'news & media';
     const items = section.items.filter((item) => {
       const label = item.labelEn.trim().toLowerCase();
       return item.href !== '/survey-form' &&
@@ -87,6 +89,19 @@ export default function SiteHeader({ ctaHref }: SiteHeaderProps) {
           href: `/agritech/${slug}`,
         })),
       }
+      : isNewsMediaSection
+        ? {
+          ...section,
+          items: [
+            ...items.filter((item) => item.href !== '/news-media/gallery'),
+            {
+              ...(items.find((item) => item.href === '/news-media/gallery') ?? {}),
+              labelEn: 'Newspaper Gallery',
+              labelUr: 'اخباری گیلری',
+              href: '/news-media/gallery',
+            },
+          ],
+        }
       : { ...section, items };
   });
 
